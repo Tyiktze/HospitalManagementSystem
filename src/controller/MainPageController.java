@@ -11,7 +11,7 @@ public class MainPageController {
 	@FXML
 	private SidebarController sidebarController;
 	
-	private HospitalManagement hospital = new HospitalManagement();
+	private HospitalManagement hospital = new HospitalManagement();	//Contains the actual array
 
 	@FXML
 	public void initialize(){
@@ -34,7 +34,7 @@ public class MainPageController {
 	        Object controller = loader.getController();
 
 	        if (controller instanceof StaffController sc) {
-	            sc.setHospitalManagement(hospital);
+	            sc.setHospitalManagement(hospital);	//pass the array into that specific controller
 	        }
 	        
 
