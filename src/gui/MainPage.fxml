@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainPageController">
+	<left>
+		<fx:include fx:id="sidebar" source="Sidebar.fxml" />
+	</left>
+   <top>
+      <VBox alignment="TOP_CENTER" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="HOSPITAL MANAGEMENT SYSTEM">
+               <font>
+                  <Font name="Calibri" size="36.0" />
+               </font>
+            </Label>
+            <Separator prefWidth="200.0" />
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <StackPane fx:id="contentArea"/>
+   </center>
+
+</BorderPane>
