@@ -9,7 +9,7 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StaffController">
    <center>
-      <VBox BorderPane.alignment="CENTER">
+      <VBox fx:id="mainContent" BorderPane.alignment="CENTER">
          <children>
             <Label text="Welcome to Staff Window!">
                <VBox.margin>
