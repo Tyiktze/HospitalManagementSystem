@@ -10,16 +10,12 @@ public class MainPageController {
 	private StackPane contentArea;
 	@FXML
 	private SidebarController sidebarController;
-	
-	private HospitalManagement hospital = new HospitalManagement();	//Contains the actual array
 
 	@FXML
 	public void initialize(){
 
 		sidebarController.setMainController(this);
-		
 		loadPage("Dashboard.fxml");
-
 	}
 	
 	public void loadPage(String page){
@@ -30,12 +26,7 @@ public class MainPageController {
 	    	            getClass().getResource("/gui/" + page)
 	    	        );
 	        Parent root = loader.load();
-	        
-	        Object controller = loader.getController();
-
-	        if (controller instanceof StaffController sc) {
-	            sc.setHospitalManagement(hospital);	//pass the array into that specific controller
-	        }
+	  
 	        
 
 	        contentArea.getChildren().clear();
