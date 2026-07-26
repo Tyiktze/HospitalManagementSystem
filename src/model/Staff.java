@@ -20,9 +20,21 @@ public class Staff {
 	}
 	
 	//Methods
+	//PRINTS in console
 	public void showStaffInfo() {
 		System.out.printf("[%s]\t[%s]\t[%s]\t[%s]\t[%d]%n",
 		        id, name, designation, sex, salary);
+		
+		
+	}
+	
+	//Returns a string
+	public String getStaffInfo() {
+		return ("ID: " + id
+                + "\nName: " + name
+                + "\nDesignation: " + designation
+                + "\nSex: " + sex
+                + "\nSalary: " + salary);
 	}
 	
 	//Getters & Setters

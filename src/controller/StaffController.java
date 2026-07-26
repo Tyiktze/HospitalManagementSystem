@@ -14,7 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-
+import model.OperationResult;
 import model.Staff;
 import services.StaffService;
 
@@ -116,6 +116,7 @@ public class StaffController {
 
         staffService = AppContext.getInstance().getStaffService();
         
+        //Bind managed property to visibility to ensure the display works
         welcome.managedProperty().bind(welcome.visibleProperty());
         addStaff.managedProperty().bind(addStaff.visibleProperty());
         findStaff.managedProperty().bind(findStaff.visibleProperty());
@@ -131,7 +132,8 @@ public class StaffController {
         colSex.setCellValueFactory(new PropertyValueFactory<>("sex"));
         colSalary.setCellValueFactory(new PropertyValueFactory<>("salary"));
     }
-
+    
+    //Hide all windows and allow one to show
     private void hideAll(){
         welcome.setVisible(false);
         addStaff.setVisible(false);
@@ -141,34 +143,40 @@ public class StaffController {
         removeStaff.setVisible(false);
         updateStaff.setVisible(false);
     }
+    
+    //The logic for buttons, etc are typically like this:
+    //xxxClicked - When the Menu Button is clicked
+    //btnxxxClicked - When there is a submit action
+    //btnConfirmxxxClicked - Sometimes there will be situations where the user has to search, edit / delete and another confirm message will pop up
 
-
-
-
-    // ADD STAFF
+    //ADD STAFF
     @FXML
     public void addStaffClicked(ActionEvent event){
         hideAll();
         addStaff.setVisible(true);
+        idField.setText(staffService.getStaffId());
     }
 
     @FXML
     public void btnAddStaffClicked(ActionEvent event){
-    	String newId = idField.getText();
-    	String newName = nameField.getText();
-    	String newDesignation = designationField.getText();
-    	String newSex = sexField.getText();
-    	int newSalary = Integer.parseInt(salaryField.getText());
+    	OperationResult<Void> res = staffService.addStaff(
+					    		    idField.getText(),
+					    		    nameField.getText(),
+					    		    designationField.getText(),
+					    		    sexField.getText(),
+					    		    salaryField.getText());
     	
-        staffService.addStaff(newId, newName, newDesignation , newSex, newSalary);
-
-        idField.clear();
-        nameField.clear();
-        designationField.clear();
-        sexField.clear();
-        salaryField.clear();
-        
-        staffLog.setText("Staff ID: " + newId + " added.");
+    	staffLog.setText(res.getMessage());
+    	
+    	if (res.isSuccess()) {
+    		staffTable.refresh();
+    		
+    		idField.setText(staffService.getStaffId());
+            nameField.clear();
+            designationField.clear();
+            sexField.clear();
+            salaryField.clear();
+    	}
     }
     
     //REMOVE STAFF
@@ -181,33 +189,29 @@ public class StaffController {
     @FXML
     public void btnRemoveStaffClicked(ActionEvent event){
     	String id = removeIdField.getText();
-    	selectedStaff = staffService.findStaff(id);
+    	OperationResult<Staff> res = staffService.findStaff(id);
 
-        if(selectedStaff == null){
-        	staffRemoveDetails.setText("Staff not found");
+        if(!res.isSuccess()){
+        	staffRemoveDetails.setText(res.getMessage());
             return;
         }
-
-        staffRemoveDetails.setText(
-        		"ID: " + selectedStaff.getId()
-                + "\nName: " + selectedStaff.getName()
-                + "\nDesignation: " + selectedStaff.getDesignation()
-                + "\nSex: " + selectedStaff.getSex()
-                + "\nSalary: " + selectedStaff.getSalary());
+        
+        selectedStaff = res.getData();
+        staffRemoveDetails.setText(selectedStaff.getStaffInfo());
     }
     
     @FXML
-    public void btnConformRemoveStaffClicked(ActionEvent event){
-    	if (selectedStaff == null) {
-    		return;
-    	}
+    public void btnConfirmRemoveStaffClicked(ActionEvent event){
+    	if (selectedStaff == null) { return; }
     	
-    	staffService.removeStaff(selectedStaff.getId());
-    	staffRemoveDetails.setText("");
-    	staffLog.setText("Staff " + selectedStaff.getId() + " deleted. This action cannot be undone.");
-        removeIdField.clear();
-
-        selectedStaff = null;
+    	OperationResult<Void> res = staffService.removeStaff(selectedStaff);
+    	staffLog.setText(res.getMessage());
+    	if (res.isSuccess()) {
+    		staffTable.refresh();
+    		staffRemoveDetails.setText("");
+    		removeIdField.clear();
+    		selectedStaff = null;
+    	}
     }
     
     //Update Staff
@@ -221,19 +225,15 @@ public class StaffController {
     @FXML
     public void btnUpdateStaffClicked(ActionEvent event) {
     	String id = updateIdField.getText();
-    	selectedStaff = staffService.findStaff(id);
+    	OperationResult<Staff> res = staffService.findStaff(id);
 
-        if(selectedStaff == null){
-        	staffUpdateDetails.setText("Staff not found");
+    	if(!res.isSuccess()){
+    		staffUpdateDetails.setText(res.getMessage());
             return;
         }
-
-        staffUpdateDetails.setText(
-        		"ID: " + selectedStaff.getId()
-                + "\nName: " + selectedStaff.getName()
-                + "\nDesignation: " + selectedStaff.getDesignation()
-                + "\nSex: " + selectedStaff.getSex()
-                + "\nSalary: " + selectedStaff.getSalary());
+        
+        selectedStaff = res.getData();
+        staffUpdateDetails.setText(selectedStaff.getStaffInfo());
         
         updateStaffInner.setVisible(true);
         
@@ -252,17 +252,24 @@ public class StaffController {
     	String newName = updateNameField.getText();
     	String newDesignation = updateDesignationField.getText();
     	String newSex = updateSexField.getText();
-    	int newSalary = Integer.parseInt(updateSalaryField.getText());
+    	String rawSalary = updateSalaryField.getText();
     	
-    	staffService.updateStaff(selectedStaff, newName, newDesignation, newSex, newSalary);
+    	OperationResult<Void> res = staffService.updateStaff(selectedStaff, newName, newDesignation, newSex, rawSalary);
     	
-    	updateIdField.clear();
-    	updateNameField.clear();
-        updateDesignationField.clear();
-        updateSexField.clear();
-        updateSalaryField.clear();
-        staffUpdateDetails.setText("");
-        staffLog.setText("Staff " + selectedStaff.getId() + " fields has been updated.");
+    	staffLog.setText(res.getMessage());
+    	
+    	if(res.isSuccess()) {
+    		staffTable.refresh();
+    		
+    		updateIdField.clear();
+        	updateNameField.clear();
+            updateDesignationField.clear();
+            updateSexField.clear();
+            updateSalaryField.clear();
+            staffUpdateDetails.setText("");
+            
+            selectedStaff = null;
+    	}     
     }
     
     
@@ -276,16 +283,19 @@ public class StaffController {
     @FXML
     public void btnFindStaffClicked(ActionEvent event){
         String id = findIdField.getText();
-        Staff staff = staffService.findStaff(id);
-
-        if(staff == null){
-        	staffLog.setText("Staff " + id + " not found.");
+        OperationResult<Staff> res = staffService.findStaff(id);
+        
+        staffLog.setText(res.getMessage());
+        
+        if(!res.isSuccess()){
             return;
         }
         
+        Staff staff = res.getData();
+
+        
         findIdField.clear();
         staffTable.setItems(FXCollections.observableArrayList(staff));
-        staffLog.setText("Staff " + id + " found.");
         hideAll();
         displayStaff.setVisible(true);
     }
@@ -303,16 +313,17 @@ public class StaffController {
     	String name = searchNameField.getText();
     	String designation = searchDesignationField.getText();
     	String sex = searchSexField.getText();
+    	String rawSalary = searchSalaryField.getText();
     	
-    	int salary = 0;
-
-        if (!searchSalaryField.getText().isEmpty()) {
-            salary = Integer.parseInt(searchSalaryField.getText());
-        }
+    	OperationResult<ArrayList<Staff>> res = staffService.searchStaff(id, name, designation, sex, rawSalary);
     	
-    	Staff sample = new Staff(id, name, designation, sex, salary);
+    	staffLog.setText(res.getMessage());
     	
-    	ArrayList<Staff> filteredList = staffService.searchStaff(sample);
+    	if (!res.isSuccess()) {
+    		return;
+    	}
+    	
+    	ArrayList<Staff> filteredList = res.getData();
     	
     	staffTable.setItems(
     			FXCollections.observableArrayList(filteredList)
@@ -323,7 +334,7 @@ public class StaffController {
     	searchDesignationField.clear();
     	searchSexField.clear();
     	searchSalaryField.clear();
-    	staffLog.setText("Search successful, " + filteredList.size() + " entries found.");
+    	
     	hideAll();
         displayStaff.setVisible(true);
     }

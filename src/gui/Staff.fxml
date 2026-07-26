@@ -27,7 +27,7 @@
 
 
             <!-- Welcome -->
-            <VBox fx:id="welcome" managed="false" spacing="10" visible="true">
+            <VBox fx:id="welcome" managed="false" spacing="10">
 
                 <Label minWidth="-Infinity" text="Welcome to Staff Window!">
                     <font>
@@ -47,7 +47,7 @@
 
                 <Label minWidth="-Infinity" text="Staff ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
 
-                <TextField fx:id="idField" minWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField fx:id="idField" editable="false" minWidth="-Infinity" text="S000" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
 
 
@@ -135,7 +135,7 @@
                <Button alignment="CENTER" minHeight="25.0" minWidth="-Infinity" onAction="#btnRemoveStaffClicked" prefWidth="100.0" text="Find Staff" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                <Label minWidth="-Infinity" text="Staff Details:" GridPane.rowIndex="2" />
                <Label fx:id="staffRemoveDetails" minWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-               <Button alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="-Infinity" onAction="#btnConformRemoveStaffClicked" prefWidth="100.0" text="CONFIRM" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+               <Button alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="25.0" minWidth="-Infinity" onAction="#btnConfirmRemoveStaffClicked" prefWidth="100.0" text="CONFIRM" GridPane.columnSpan="2" GridPane.rowIndex="3" />
             </children>
          </GridPane>
          <GridPane fx:id="updateStaff" hgap="10" managed="false" vgap="10" visible="false">

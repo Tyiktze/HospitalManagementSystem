@@ -1,6 +1,8 @@
 package services;
 
+import model.OperationResult;
 import model.Staff;
+import utils.InputValidator;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -8,17 +10,23 @@ import java.util.ArrayList;
 
 public class StaffService {
 	private final ArrayList<Staff> staffList;
+	private int nextId;
 	
 	public StaffService() {
 		this.staffList = new ArrayList<>();
 		initialiseData();
+		nextId = staffList.size() + 1;
 	}
 	
 	private void initialiseData() {
-		staffList.add(new Staff("001", "Teoh", "Admin", "Male", 3000));
-		staffList.add(new Staff("002", "Ooi", "Random Guy", "Male", 6700));
-		staffList.add(new Staff("003", "Beh", "Poor", "Male", 2));
-		staffList.add(new Staff("004", "Teoh", "In Debt", "Male", -10));
+		staffList.add(new Staff("S001", "Teoh", "Admin", "Male", 3000));
+		staffList.add(new Staff("S002", "Ooi", "Random Guy", "Male", 6700));
+		staffList.add(new Staff("S003", "Beh", "Poor", "Male", 2));
+		staffList.add(new Staff("S004", "Teoh", "In Debt", "Male", -10));
+	}
+	
+	public String getStaffId() {
+		return String.format("S%03d", nextId);
 	}
 	
 	
@@ -35,62 +43,92 @@ public class StaffService {
 		return arr;
 	}
 	
-	public void addStaff(String newId, String newName, String newDesignation, String newSex, int newSalary) {
-		Staff staff = new Staff(newId, newName, newDesignation ,newSex , newSalary);
+	public OperationResult<Void> addStaff(String newId, String newName, String newDesignation, String newSex, String rawSalary) {
+		if (newName == null || newName.isBlank()) return new OperationResult<>(false, "Please enter a name", null);
+		if (newDesignation == null || newDesignation.isBlank()) return new OperationResult<>(false, "Please enter a designation", null);
+		if (newSex == null || newSex.isBlank()) return new OperationResult<>(false, "Please enter a sex", null);
+		
+		Integer salary = InputValidator.parseInteger(rawSalary);
+		if (salary == null) return new OperationResult<>(false, "Salary must be a number.", null);
+		
+		Staff staff = new Staff(newId, newName, newDesignation, newSex, salary);
 		staffList.add(staff);
+		
+		nextId++;
+		return new OperationResult<>(true, "Staff ID: " + newId + " added.", null);
 	}
 	
-	public void removeStaff(String id) {
-		for(Staff staff : staffList){
-
-	        if(staff.getId().equalsIgnoreCase(id)){
-	            staffList.remove(staff);
-	            return;
-	        }
-	    }
+	public OperationResult<Void> removeStaff(Staff staff) {
+		if (staff == null) return new OperationResult<>(false, "No Staff selected", null);
+		
+		if (staffList.remove(staff)) {
+			return new OperationResult<>(true, "Staff " + staff.getId() + " deleted. This action cannot be undone.", null);
+		}
+		
+		return new OperationResult<>(false, "Staff no longer exist.", null);
 	}
 	
-	public void updateStaff(Staff staff, String newName, String newDesignation, String newSex, int newSalary) {
+	public OperationResult<Void> updateStaff(Staff staff, String newName, String newDesignation, String newSex, String rawSalary) {
+		if (staff == null) return new OperationResult<>(false, "Staff not found.", null);
+		
 		if (newName != null && !newName.isEmpty()) staff.setName(newName);
     	if (newDesignation != null && !newDesignation.isEmpty()) staff.setDesignation(newDesignation);
     	if (newSex != null && !newSex.isEmpty()) staff.setSex(newSex);
-    	staff.setSalary(newSalary);
+    	
+    	if (rawSalary != null && !rawSalary.isEmpty()) {
+    		Integer salary = InputValidator.parseInteger(rawSalary);
+    		if (salary == null) return new OperationResult<>(false, "Salary must be a number.", null);
+        	staff.setSalary(salary);
+    	}
+    	
+    	return new OperationResult<>(true, "Staff " + staff.getId() + " updated.", null);
 	}
 	
-	public Staff findStaff(String id) {
+	public OperationResult<Staff> findStaff(String id) {
+		if (id == null || id.isBlank()) return new OperationResult<>(false, "Please enter an ID", null);
+		
 		for (Staff staff: staffList) {
-			if (staff.getId().equals(id)) return staff;
+			if (id.equalsIgnoreCase(staff.getId())) return new OperationResult<>(true, "Staff found", staff);
 		}
 		
-		return null;
+		return new OperationResult<>(false, "Staff not found", null);
 	}
 	
 	
-	public ArrayList<Staff> searchStaff(Staff sample) {
+	public OperationResult<ArrayList<Staff>> searchStaff(String id, String name, String designation, String sex, String rawSalary) {
 		ArrayList<Staff> result = new ArrayList<>();
+		Integer salary = 0;
+		
+		if(rawSalary != null && !rawSalary.isBlank()) {
+	        salary = InputValidator.parseInteger(rawSalary);
+
+	        if(salary == null) {
+	            return new OperationResult<>(false, "Salary must be a number.", null);
+	        }
+	    }
 		
 		for (Staff staff: staffList) {
 			boolean match = true;
 			
-			if (sample.getId() != null && !sample.getId().isEmpty() 
-					&& !sample.getId().equalsIgnoreCase(staff.getId())) match = false;
+			if (id != null && !id.isBlank() 
+					&& !id.equalsIgnoreCase(staff.getId())) match = false;
 			
-			if (sample.getName() != null && !sample.getName().isEmpty() 
-					&& !staff.getName().toLowerCase().contains(sample.getName().toLowerCase())) match = false;
+			if (name != null && !name.isBlank()
+					&& !staff.getName().toLowerCase().contains(name.toLowerCase())) match = false;
 			
-			if (sample.getDesignation() != null && !sample.getDesignation().isEmpty() 
-					&& !staff.getDesignation().toLowerCase().contains(sample.getDesignation().toLowerCase())) match = false;
+			if (designation != null && !designation.isBlank()
+					&& !staff.getDesignation().toLowerCase().contains(designation.toLowerCase())) match = false;
 			
-			if (sample.getSex() != null && !sample.getSex().isEmpty() 
-					&& !sample.getSex().equalsIgnoreCase(staff.getSex())) match = false;
+			if (sex != null && !sex.isBlank()
+					&& !sex.equalsIgnoreCase(staff.getSex())) match = false;
 			
-			if (sample.getSalary() != 0 
-					&& sample.getSalary() != staff.getSalary()) match = false;
+			if (salary != 0
+					&& salary  != staff.getSalary()) match = false;
 			
 			if (match) result.add(staff);
 		}
 		
-		return result;
+		return new OperationResult<>(true, "Search successful, " + result.size() + " entries found.", result);
 	}
 	
 }
