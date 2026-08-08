@@ -17,7 +17,7 @@ public class DoctorService {
     }
 
     private void initialiseData() {
-        doctorList.add(new Doctor("D001", "Dr. BEH JIE SHEN", "Surgeon", "8-11AM", "MBBS, MD", 11));
+        doctorList.add(new Doctor("D001", "Dr. Teoh YT", "Surgeon", "8-11AM", "MBBS, MD", 11));
         doctorList.add(new Doctor("D002", "Dr. Tom Wong", "Surgeon", "8-11AM", "MBBS, MD", 12));
         doctorList.add(new Doctor("D003", "Dr. John Lim", "Physician", "10-3PM", "MBBS, MS", 45));
         doctorList.add(new Doctor("D004", "Dr. Amy Chia", "Surgeon", "7-11AM", "MBBS, MD", 8));
