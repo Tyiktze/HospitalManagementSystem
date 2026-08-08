@@ -8,10 +8,14 @@ public class AppContext {
 	
 	private final LoginService loginService;
 	private final StaffService staffService;
+	private final DoctorService doctorService;
+	private final PatientService patientService;
 	
 	private AppContext() {
 		this.loginService = new LoginService();
 		this.staffService = new StaffService();
+		this.doctorService = new DoctorService();
+		this.patientService = new PatientService();
 	}
 	
 	
@@ -22,4 +26,7 @@ public class AppContext {
 	
 	public LoginService getLoginService() { return loginService; }
 	public StaffService getStaffService() { return staffService; }
+	public DoctorService getDoctorService() { return doctorService; }
+    public PatientService getPatientService() { return patientService; }
+	
 }
