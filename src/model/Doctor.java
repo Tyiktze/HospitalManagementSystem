@@ -6,7 +6,7 @@ public class Doctor {
     private String specialist;
     private String workTime;
     private String qualification;
-    private int room; // 新增 PDF 要求的房间号
+    private int room; 
 
     public Doctor() {}
 
