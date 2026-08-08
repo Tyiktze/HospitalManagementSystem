@@ -6,25 +6,45 @@ public class Patient {
     private String disease;
     private String sex;
     private String admitStatus;
+    private int age; // 新增 PDF 要求的年龄
 
-
-    //constructor
     public Patient() {}
 
-    public Patient(String id, String name, String specialist, String workTime, String qualification) {
+    public Patient(String id, String name, String disease, String sex, String admitStatus, int age) {
         this.id = id;
         this.name = name;
-        this.disease = specialist;
-        this.sex = workTime;
-        this.admitStatus = qualification;
+        this.disease = disease;
+        this.sex = sex;
+        this.admitStatus = admitStatus;
+        this.age = age;
     }
-    //print the Patient info
+
     public void showPatientInfo() {
-        System.out.printf("[%s]\t[%s]\t[%s]\t[%s]\t[%s]%n",
-                id, name, disease, sex, admitStatus);
-
-
+        System.out.printf("[%s]\t[%s]\t[%s]\t[%s]\t[%s]\t[%d]%n",
+                id, name, disease, sex, admitStatus, age);
     }
 
+    public String getPatientInfo() {
+        return String.format("ID: %s | Name: %s | Disease: %s | Sex: %s | Admit Status: %s | Age: %d",
+                id, name, disease, sex, admitStatus, age);
+    }
 
+    // Getters & Setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public String getDisease() { return disease; }
+    public void setDisease(String disease) { this.disease = disease; }
+
+    public String getSex() { return sex; }
+    public void setSex(String sex) { this.sex = sex; }
+
+    public String getAdmitStatus() { return admitStatus; }
+    public void setAdmitStatus(String admitStatus) { this.admitStatus = admitStatus; }
+
+    public int getAge() { return age; }
+    public void setAge(int age) { this.age = age; }
 }
