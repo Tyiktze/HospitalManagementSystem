@@ -17,7 +17,7 @@ public class PatientService {
     }
 
     private void initialiseData() {
-        patientList.add(new Patient("P001", "BEH JIE SHEN", "Fever", "Male", "Admitted", 20));
+        patientList.add(new Patient("P001", "Teoh Ah Kau", "Fever", "Male", "Admitted", 20));
         patientList.add(new Patient("P002", "Alice Smith", "Flu", "Female", "Discharged", 25));
         patientList.add(new Patient("P003", "Bob Lee", "Diabetes", "Male", "Admitted", 40));
         patientList.add(new Patient("P004", "Charlie Brown", "Fracture", "Male", "Admitted", 15));
