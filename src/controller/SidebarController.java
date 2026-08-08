@@ -18,15 +18,16 @@ public class SidebarController {
 
 	}
 	// Event Listener on Button.onAction
+	//open doctor page
 	@FXML
 	public void doctorsClicked(ActionEvent event) {
-		System.out.println("Doctor page");
+		mainController.loadPage("Doctor.fxml");
 
 	}
 	// Event Listener on Button.onAction
 	@FXML
 	public void patientsClicked(ActionEvent event) {
-		System.out.println("Patients page");
+		mainController.loadPage("Patient.fxml");
 
 	}
 	// Event Listener on Button.onAction
