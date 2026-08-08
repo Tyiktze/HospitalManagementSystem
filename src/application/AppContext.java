@@ -2,6 +2,8 @@ package application;
 
 import services.LoginService;
 import services.StaffService;
+import services.DoctorService;
+import services.PatientService;
 
 public class AppContext {
 	private static AppContext instance;
