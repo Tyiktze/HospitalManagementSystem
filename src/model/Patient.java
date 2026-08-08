@@ -6,7 +6,7 @@ public class Patient {
     private String disease;
     private String sex;
     private String admitStatus;
-    private int age; // 新增 PDF 要求的年龄
+    private int age; 
 
     public Patient() {}
 
