@@ -6,9 +6,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import java.util.ArrayList;
-
 import application.AppContext;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -35,6 +33,7 @@ public class DoctorController {
     @FXML private TextField specialistField;
     @FXML private TextField workTimeField;
     @FXML private TextField qualificationField;
+    @FXML private TextField roomField; 
 
     // Remove Fields
     @FXML private TextField removeIdField;
@@ -48,6 +47,7 @@ public class DoctorController {
     @FXML private TextField updateSpecialistField;
     @FXML private TextField updateWorkTimeField;
     @FXML private TextField updateQualificationField;
+    @FXML private TextField updateRoomField;
 
     // Find Field
     @FXML private TextField findIdField;
@@ -58,6 +58,7 @@ public class DoctorController {
     @FXML private TextField searchSpecialistField;
     @FXML private TextField searchWorkTimeField;
     @FXML private TextField searchQualificationField;
+    @FXML private TextField searchRoomField; 
 
     // Table
     @FXML private TableView<Doctor> doctorTable;
@@ -66,17 +67,16 @@ public class DoctorController {
     @FXML private TableColumn<Doctor, String> colSpecialist;
     @FXML private TableColumn<Doctor, String> colWorkTime;
     @FXML private TableColumn<Doctor, String> colQualification;
+    @FXML private TableColumn<Doctor, Integer> colRoom; 
 
     // Log
     @FXML private Label doctorLog;
-
     private DoctorService doctorService;
     private Doctor selectedDoctor;
 
     @FXML
     public void initialize() {
         doctorService = AppContext.getInstance().getDoctorService();
-
         welcome.managedProperty().bind(welcome.visibleProperty());
         addDoctor.managedProperty().bind(addDoctor.visibleProperty());
         findDoctor.managedProperty().bind(findDoctor.visibleProperty());
@@ -90,6 +90,7 @@ public class DoctorController {
         colSpecialist.setCellValueFactory(new PropertyValueFactory<>("specialist"));
         colWorkTime.setCellValueFactory(new PropertyValueFactory<>("workTime"));
         colQualification.setCellValueFactory(new PropertyValueFactory<>("qualification"));
+        colRoom.setCellValueFactory(new PropertyValueFactory<>("room")); 
     }
 
     private void hideAll() {
@@ -101,6 +102,7 @@ public class DoctorController {
         removeDoctor.setVisible(false);
         updateDoctor.setVisible(false);
     }
+
 
     @FXML
     public void addDoctorClicked(ActionEvent event) {
@@ -116,11 +118,10 @@ public class DoctorController {
                 nameField.getText(),
                 specialistField.getText(),
                 workTimeField.getText(),
-                qualificationField.getText()
+                qualificationField.getText(),
+                roomField.getText()
         );
-
         doctorLog.setText(res.getMessage());
-
         if (res.isSuccess()) {
             doctorTable.refresh();
             idField.setText(doctorService.getDoctorId());
@@ -128,6 +129,7 @@ public class DoctorController {
             specialistField.clear();
             workTimeField.clear();
             qualificationField.clear();
+            roomField.clear();
         }
     }
 
@@ -141,12 +143,10 @@ public class DoctorController {
     public void btnRemoveDoctorClicked(ActionEvent event) {
         String id = removeIdField.getText();
         OperationResult<Doctor> res = doctorService.findDoctor(id);
-
         if (!res.isSuccess()) {
             doctorRemoveDetails.setText(res.getMessage());
             return;
         }
-
         selectedDoctor = res.getData();
         doctorRemoveDetails.setText(selectedDoctor.getDoctorInfo());
     }
@@ -154,7 +154,6 @@ public class DoctorController {
     @FXML
     public void btnConfirmRemoveDoctorClicked(ActionEvent event) {
         if (selectedDoctor == null) return;
-
         OperationResult<Void> res = doctorService.removeDoctor(selectedDoctor);
         doctorLog.setText(res.getMessage());
         if (res.isSuccess()) {
@@ -176,37 +175,33 @@ public class DoctorController {
     public void btnUpdateDoctorClicked(ActionEvent event) {
         String id = updateIdField.getText();
         OperationResult<Doctor> res = doctorService.findDoctor(id);
-
         if (!res.isSuccess()) {
             doctorUpdateDetails.setText(res.getMessage());
             return;
         }
-
         selectedDoctor = res.getData();
         doctorUpdateDetails.setText(selectedDoctor.getDoctorInfo());
-
+        
         updateDoctorInner.setVisible(true);
-
         updateNameField.setText(selectedDoctor.getName());
         updateSpecialistField.setText(selectedDoctor.getSpecialist());
         updateWorkTimeField.setText(selectedDoctor.getWorkTime());
         updateQualificationField.setText(selectedDoctor.getQualification());
+        updateRoomField.setText(String.valueOf(selectedDoctor.getRoom()));
     }
 
     @FXML
     public void btnConfirmUpdateDoctorClicked(ActionEvent event) {
         if (selectedDoctor == null) return;
-
         OperationResult<Void> res = doctorService.updateDoctor(
                 selectedDoctor,
                 updateNameField.getText(),
                 updateSpecialistField.getText(),
                 updateWorkTimeField.getText(),
-                updateQualificationField.getText()
+                updateQualificationField.getText(),
+                updateRoomField.getText()
         );
-
         doctorLog.setText(res.getMessage());
-
         if (res.isSuccess()) {
             doctorTable.refresh();
             updateIdField.clear();
@@ -214,6 +209,7 @@ public class DoctorController {
             updateSpecialistField.clear();
             updateWorkTimeField.clear();
             updateQualificationField.clear();
+            updateRoomField.clear();
             doctorUpdateDetails.setText("");
             selectedDoctor = null;
         }
@@ -229,11 +225,8 @@ public class DoctorController {
     public void btnFindDoctorClicked(ActionEvent event) {
         String id = findIdField.getText();
         OperationResult<Doctor> res = doctorService.findDoctor(id);
-
         doctorLog.setText(res.getMessage());
-
         if (!res.isSuccess()) return;
-
         findIdField.clear();
         doctorTable.setItems(FXCollections.observableArrayList(res.getData()));
         hideAll();
@@ -253,21 +246,18 @@ public class DoctorController {
                 searchNameField.getText(),
                 searchSpecialistField.getText(),
                 searchWorkTimeField.getText(),
-                searchQualificationField.getText()
+                searchQualificationField.getText(),
+                searchRoomField.getText()
         );
-
         doctorLog.setText(res.getMessage());
-
         if (!res.isSuccess()) return;
-
         doctorTable.setItems(FXCollections.observableArrayList(res.getData()));
-
         searchIdField.clear();
         searchNameField.clear();
         searchSpecialistField.clear();
         searchWorkTimeField.clear();
         searchQualificationField.clear();
-
+        searchRoomField.clear();
         hideAll();
         displayDoctor.setVisible(true);
     }
