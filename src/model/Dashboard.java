@@ -3,56 +3,74 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
+import services.MedicalService;
 import services.PatientService;
 
 public class Dashboard {
 	private int totalPatients;
 	private int availableBeds;
-	private double occupancyRate;
+	private int totalStaff;
 	private int[] ageGroupCount;
-	//private List<Items> criticalInventory;
-	private PatientService patientService;
+	private List<Medical> criticalInventory;
 	
-	public Dashboard(PatientService patientService) {
-	    this.patientService = patientService;
+	
+	public Dashboard() {
 	    this.totalPatients = 0;
 	    this.availableBeds = 100;
-	    this.occupancyRate = 0.00;
+	    this.totalStaff = 0;
 	    this.ageGroupCount = new int[4];
+	    this.criticalInventory = new ArrayList<>();
 	}
 	
 	
-	public void updateDashboard() {
-	    ArrayList<Patient> patientList = patientService.getPatients();
-
+	public void updateDashboard(ArrayList<Patient> patientList, List<Medical> medicalList, ArrayList<Staff> staffList) {
 	    this.totalPatients = patientList.size();
-	    this.availableBeds = totalBeds - totalPatients;
-	    this.occupancyRate = ((double) totalPatients / 100.00) * 100;/*the first 100 is the maximum number of patients, 
-		                                                                  and the second 100 is to convert to percentage*/
+	    this.availableBeds = 100 - totalPatients;
+	    this.totalStaff = staffList.size();
+	    
+	    for (Patient patient : patientList) { //to get the age group distribution
+            int age = patient.getAge();
+
+            if (age <= 18) { 
+                ageGroupCount[0]++; //index 0 is for patients aged between 0 and 18
+            } else if (age <= 40) {
+                ageGroupCount[1]++; //index 1 is for patients aged between 19 and 40
+            } else if (age <= 65) {
+                ageGroupCount[2]++; //index 2 is for patients aged between 41 and 65
+            } else {
+                ageGroupCount[3]++; //index 3 is for patients aged more than 65
+            }
+        }
+	    
+	    
+	    for (Medical medical : medicalList) { //to get the critical inventory
+	        if (medical.getCount() <= 10) {
+	            this.criticalInventory.add(medical); //save the medical object to the list
+	        }
+	    }
+	    
+	    
+	}
+
+	//all the get methods
+	public int getTotalPatients() {
+		return totalPatients;
 	}
 	
-	
-		 /*the first 100 is the maximum number of patients, 
-														and the second 100 is to convert to percentage*/
-		
+	public int getAvailableBeds() {
+		return availableBeds;
 	}
 	
-	public void getAgeGroupCount() {
-		ArrayList<Patient> patientList = patientService.getPatients();
-		for (int i= 0;i<patientList.size();i++) {
-			if (patientList.get(i).getAge()>=0 && patientList.get(i).getAge()<=18 ) {
-				ageGroupCount[0]++; //index 0 is for patient aged between 0 and 18 (means non-adult)
-			}
-			else if (patientList.get(i).getAge()>=19 && patientList.get(i).getAge()<=40) {
-				ageGroupCount[1]++; //index 1 is for patient aged between 19 and 40
-			}
-			else if (patientList.get(i).getAge()>=41 && patientList.get(i).getAge()<=65) {
-				ageGroupCount[2]++; //index 2 is for patient aged between 41 and 65
-			}
-			else {
-				ageGroupCount[3]++; //index 3 is for patient aged more than 65
-			}
-		}
+	public int getTotalStaff() {
+		return totalStaff;
+	}
+	
+	public int[] getAgeGroupCount() {
+		return ageGroupCount;
+	}
+	
+	public List<Medical> getCriticalInventory() {
+	    return criticalInventory;
 	}
 	
 	

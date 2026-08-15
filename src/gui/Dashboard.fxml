@@ -2,101 +2,289 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="522.0" prefWidth="916.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
+<VBox prefHeight="700.0" prefWidth="916.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
 
    <children>
-      
-                        <Label fx:id="dateLabel" alignment="TOP_RIGHT" maxWidth="Infinity" text="Date|Time">
+
+      <Label fx:id="dateLabel" alignment="TOP_RIGHT" maxWidth="Infinity" text="Date|Time">
+
          <font>
             <Font name="Berlin Sans FB" size="14.0" />
          </font>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
+
       </Label>
 
+
       <VBox alignment="CENTER">
+
          <children>
+
             <Label text="Welcome To HMS" textAlignment="CENTER">
+
                <font>
                   <Font name="Berlin Sans FB" size="24.0" />
                </font>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
+
             </Label>
+
          </children>
+
          <VBox.margin>
             <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
          </VBox.margin>
+
       </VBox>
+
+
       <HBox prefHeight="100.0" prefWidth="200.0" spacing="80.0">
+
          <children>
+
+            <!-- Total Patients -->
             <VBox maxWidth="250.0" prefHeight="104.0" prefWidth="237.0" style="-fx-background-color: #f4f4f4; -fx-background-radius: 10; -fx-border-color: #000000; -fx-border-radius: 10;">
+
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </padding>
+
                <children>
+
                   <Label text="TOTAL PATIENTS">
+
                      <font>
                         <Font name="Berlin Sans FB" size="14.0" />
                      </font>
+
                   </Label>
-                  <Label fx:id="totalPatientsLabel" text="Patient number">
+
+                  <Label fx:id="totalPatientsLabel" text="Patient Number">
+
                      <font>
                         <Font name="Berlin Sans FB" size="36.0" />
                      </font>
+
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>
+
                   </Label>
+
                </children>
+
             </VBox>
+
             <VBox maxWidth="254.0" prefHeight="104.0" prefWidth="254.0" style="-fx-background-color: #f4f4f4; -fx-background-radius: 10; -fx-border-color: #000000; -fx-border-radius: 10;">
+
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </padding>
+
                <children>
+
                   <Label text="AVAILABLE BEDS">
+
                      <font>
                         <Font name="Berlin Sans FB" size="14.0" />
                      </font>
+
                   </Label>
-                  <Label fx:id="totalPatientsLabel1">
+
+                  <Label fx:id="availableBedsLabel" text="Available Beds">
+
                      <font>
                         <Font name="Berlin Sans FB" size="36.0" />
                      </font>
+
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>
+
                   </Label>
+
                </children>
+
             </VBox>
+
+
             <VBox maxWidth="254.0" prefHeight="104.0" prefWidth="254.0" style="-fx-background-color: #f4f4f4; -fx-background-radius: 10; -fx-border-color: #000000; -fx-border-radius: 10;">
+
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                </padding>
+
                <children>
-                  <Label text="OCCUPANCY">
+
+                  <Label text="STAFF IN DUTY">
+
                      <font>
                         <Font name="Berlin Sans FB" size="14.0" />
                      </font>
+
                   </Label>
-                  <Label fx:id="totalPatientsLabel11">
+
+                  <Label fx:id="totalStaffLabel" text="Total Staff">
+
                      <font>
                         <Font name="Berlin Sans FB" size="36.0" />
                      </font>
+
                      <VBox.margin>
                         <Insets top="5.0" />
                      </VBox.margin>
+
                   </Label>
+
                </children>
+
             </VBox>
+
          </children>
+
       </HBox>
+
+
+      <HBox spacing="20.0">
+
+         <children>
+
+            <VBox maxWidth="458.0" prefWidth="458.0" spacing="8.0">
+
+               <children>
+                  <HBox />
+                  <Label text="Age Group Distribution">
+                     <font>
+                        <Font name="Berlin Sans FB" size="20.0" />
+                     </font>
+                  </Label>
+
+                  <HBox>
+
+                     <children>
+      
+                                    <Label text="0-18" />
+      
+                                    <Region prefHeight="18.0" prefWidth="24.0" HBox.hgrow="ALWAYS" />
+      
+                                                <Label fx:id="age0to18PercentageLabel" />
+
+                     </children>
+
+                  </HBox>
+
+                  <ProgressBar fx:id="age0to18Bar" maxWidth="458.0" prefWidth="458.0" />
+
+
+                  <HBox>
+
+                     <children>
+
+                              <Label text="19-40" />
+
+                              <Region HBox.hgrow="ALWAYS" />
+
+                              <Label fx:id="age19to40PercentageLabel" />
+
+                     </children>
+
+                  </HBox>
+
+                  <ProgressBar fx:id="age19to40Bar" maxWidth="458.0" prefWidth="458.0" />
+
+
+                  <HBox>
+
+                     <children>
+
+                        <Label text="41-65" />
+
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <Label fx:id="age41to65PercentageLabel" />
+
+                     </children>
+
+                  </HBox>
+
+                  <ProgressBar fx:id="age41to65Bar" maxWidth="458.0" prefWidth="458.0" />
+
+
+                  <HBox>
+
+                     <children>
+
+                        <Label text="65+" />
+
+                        <Region HBox.hgrow="ALWAYS" />
+
+                        <Label fx:id="age65PlusPercentageLabel" />
+
+                     </children>
+
+                  </HBox>
+
+                  <ProgressBar fx:id="age65PlusBar" maxWidth="458.0" prefWidth="458.0" />
+
+               </children>
+
+               <VBox.margin>
+                  <Insets left="20.0" top="20.0" />
+               </VBox.margin>
+
+            </VBox>
+
+
+            <VBox maxWidth="458.0" prefWidth="458.0">
+
+               <children>
+
+                  <!-- Title -->
+                  <Label text="Critical Inventory">
+
+                     <font>
+                        <Font name="Berlin Sans FB" size="20.0" />
+                     </font>
+
+                     <VBox.margin>
+                        <Insets bottom="10.0" top="10.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets bottom="15.0" />
+                     </padding>
+
+                  </Label>
+
+
+                  <TableView fx:id="criticalInventory" editable="false" maxWidth="458.0" prefHeight="190.0" prefWidth="458.0">
+
+                     <columns>
+
+                        <TableColumn fx:id="itemColumn" editable="false" prefWidth="300.0" text="Item" />
+                        <TableColumn fx:id="countColumn" editable="false" prefWidth="158.0" text="Count" />
+
+                     </columns>
+
+                  </TableView>
+
+               </children>
+
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+
+            </VBox>
+
+         </children>
+
+      </HBox>
+
    </children>
+
 </VBox>
