@@ -25,8 +25,10 @@ public class Dashboard {
 	
 	public void updateDashboard(ArrayList<Patient> patientList, List<Medical> medicalList, ArrayList<Staff> staffList) {
 	    this.totalPatients = patientList.size();
-	    this.availableBeds = 100 - totalPatients;
+	    this.availableBeds = Math.max(0, 100 - totalPatients);
 	    this.totalStaff = staffList.size();
+	    this.ageGroupCount = new int[4];
+	    this.criticalInventory.clear();
 	    
 	    for (Patient patient : patientList) { //to get the age group distribution
             int age = patient.getAge();

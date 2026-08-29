@@ -2,6 +2,7 @@ package services;
 
 import model.OperationResult;
 import model.Patient;
+import utils.IDCalculator;
 import utils.InputValidator;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class PatientService {
     public PatientService() {
         this.patientList = new ArrayList<>();
         initialiseData();
-        nextId = patientList.size() + 1;
+        this.nextId = IDCalculator.calculateNextId(patientList, Patient::getId);
     }
 
     private void initialiseData() {
@@ -43,7 +44,7 @@ public class PatientService {
 
         Patient patient = new Patient(id, name, disease, sex, admitStatus, age);
         patientList.add(patient);
-        nextId++;
+        nextId = Math.max(nextId + 1, IDCalculator.calculateNextId(patientList, Patient::getId));
         return new OperationResult<>(true, "Patient ID: " + id + " added.", null);
     }
 

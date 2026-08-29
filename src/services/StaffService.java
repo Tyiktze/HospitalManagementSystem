@@ -2,6 +2,7 @@ package services;
 
 import model.OperationResult;
 import model.Staff;
+import utils.IDCalculator;
 import utils.InputValidator;
 
 import java.lang.reflect.Field;
@@ -15,7 +16,7 @@ public class StaffService {
 	public StaffService() {
 		this.staffList = new ArrayList<>();
 		initialiseData();
-		nextId = staffList.size() + 1;
+		this.nextId = IDCalculator.calculateNextId(staffList, Staff::getId);
 	}
 	
 	private void initialiseData() {
@@ -35,10 +36,14 @@ public class StaffService {
 	}
 	
 	public ArrayList<String> getColumns() {
-		Field[] fields = Staff.class.getDeclaredFields();
 		ArrayList<String> arr = new ArrayList<>();
-		for (Field field : fields) {
-			arr.add(field.getName());
+		Class<?> current = Staff.class;
+		while (current != null && current != Object.class) {
+			Field[] fields = current.getDeclaredFields();
+			for (Field field : fields) {
+				arr.add(field.getName());
+			}
+			current = current.getSuperclass();
 		}
 		return arr;
 	}
@@ -50,11 +55,12 @@ public class StaffService {
 		
 		Integer salary = InputValidator.parseInteger(rawSalary);
 		if (salary == null) return new OperationResult<>(false, "Salary must be a number.", null);
+		if (!InputValidator.isPositive(salary)) return new OperationResult<>(false, "Salary must be a positive number.", null);
 		
 		Staff staff = new Staff(newId, newName, newDesignation, newSex, salary);
 		staffList.add(staff);
 		
-		nextId++;
+		nextId = Math.max(nextId + 1, IDCalculator.calculateNextId(staffList, Staff::getId));
 		return new OperationResult<>(true, "Staff ID: " + newId + " added.", null);
 	}
 	
@@ -78,6 +84,7 @@ public class StaffService {
     	if (rawSalary != null && !rawSalary.isEmpty()) {
     		Integer salary = InputValidator.parseInteger(rawSalary);
     		if (salary == null) return new OperationResult<>(false, "Salary must be a number.", null);
+    		if (!InputValidator.isPositive(salary)) return new OperationResult<>(false, "Salary must be a positive number.", null);
         	staff.setSalary(salary);
     	}
     	
@@ -97,7 +104,7 @@ public class StaffService {
 	
 	public OperationResult<ArrayList<Staff>> searchStaff(String id, String name, String designation, String sex, String rawSalary) {
 		ArrayList<Staff> result = new ArrayList<>();
-		Integer salary = 0;
+		Integer salary = null;
 		
 		if(rawSalary != null && !rawSalary.isBlank()) {
 	        salary = InputValidator.parseInteger(rawSalary);
@@ -122,8 +129,8 @@ public class StaffService {
 			if (sex != null && !sex.isBlank()
 					&& !sex.equalsIgnoreCase(staff.getSex())) match = false;
 			
-			if (salary != 0
-					&& salary  != staff.getSalary()) match = false;
+			if (salary != null
+					&& !salary.equals(staff.getSalary())) match = false;
 			
 			if (match) result.add(staff);
 		}

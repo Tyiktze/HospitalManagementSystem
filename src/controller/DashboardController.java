@@ -73,10 +73,11 @@ public class DashboardController {
         totalStaffLabel.setText(String.valueOf(dashboard.getTotalStaff()));
         
         int[] ageGroupCount = dashboard.getAgeGroupCount();
-        double age0to18 = (double) ageGroupCount[0] / dashboard.getTotalPatients();
-        double age19to40 = (double) ageGroupCount[1] / dashboard.getTotalPatients();
-        double age41to65 = (double) ageGroupCount[2] / dashboard.getTotalPatients();
-        double age65Plus = (double) ageGroupCount[3] / dashboard.getTotalPatients();
+        int totalPatients = dashboard.getTotalPatients();
+        double age0to18 = totalPatients > 0 ? (double) ageGroupCount[0] / totalPatients : 0.0;
+        double age19to40 = totalPatients > 0 ? (double) ageGroupCount[1] / totalPatients : 0.0;
+        double age41to65 = totalPatients > 0 ? (double) ageGroupCount[2] / totalPatients : 0.0;
+        double age65Plus = totalPatients > 0 ? (double) ageGroupCount[3] / totalPatients : 0.0;
         
         age0to18Bar.setProgress(age0to18); //e.g. 0.20
         age19to40Bar.setProgress(age19to40);
