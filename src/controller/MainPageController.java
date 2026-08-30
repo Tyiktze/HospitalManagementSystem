@@ -26,8 +26,11 @@ public class MainPageController {
 	    	            getClass().getResource("/gui/" + page)
 	    	        );
 	        Parent root = loader.load();
-	  
 	        
+	        String css = getClass().getResource("/css/application.css").toExternalForm();
+	        if (!root.getStylesheets().contains(css)) {
+	            root.getStylesheets().add(css);
+	        }
 
 	        contentArea.getChildren().clear();
 	        contentArea.getChildren().add(root);

@@ -12,10 +12,19 @@ public class InputValidator {
 		}
 
 		try {
-			return Integer.parseInt(value);
+			return Integer.parseInt(trimmedValue);
 		}
 		catch (NumberFormatException e) {
 			return null;
 		}
 	}
+	
+	public static boolean isPositive(Integer value) {
+	    return value != null && value > 0;
+	}
+	
+	public static boolean isNonNegative(Integer value) {
+	    return value != null && value >= 0;
+	}
+
 }

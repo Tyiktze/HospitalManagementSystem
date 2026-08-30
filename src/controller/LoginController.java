@@ -44,6 +44,7 @@ public class LoginController {
 				
 				Stage stage = (Stage) txtUsername.getScene().getWindow();
 				Scene scene = new Scene(root);
+				scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
 				
 				stage.setScene(scene);
 				stage.show();

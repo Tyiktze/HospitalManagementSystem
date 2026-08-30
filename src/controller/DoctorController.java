@@ -91,6 +91,8 @@ public class DoctorController {
         colWorkTime.setCellValueFactory(new PropertyValueFactory<>("workTime"));
         colQualification.setCellValueFactory(new PropertyValueFactory<>("qualification"));
         colRoom.setCellValueFactory(new PropertyValueFactory<>("room")); 
+
+        doctorTable.setItems(FXCollections.observableArrayList(doctorService.getDoctors()));
     }
 
     private void hideAll() {
@@ -123,7 +125,7 @@ public class DoctorController {
         );
         doctorLog.setText(res.getMessage());
         if (res.isSuccess()) {
-            doctorTable.refresh();
+            doctorTable.setItems(FXCollections.observableArrayList(doctorService.getDoctors()));
             idField.setText(doctorService.getDoctorId());
             nameField.clear();
             specialistField.clear();
@@ -157,7 +159,7 @@ public class DoctorController {
         OperationResult<Void> res = doctorService.removeDoctor(selectedDoctor);
         doctorLog.setText(res.getMessage());
         if (res.isSuccess()) {
-            doctorTable.refresh();
+            doctorTable.setItems(FXCollections.observableArrayList(doctorService.getDoctors()));
             doctorRemoveDetails.setText("");
             removeIdField.clear();
             selectedDoctor = null;
@@ -203,7 +205,7 @@ public class DoctorController {
         );
         doctorLog.setText(res.getMessage());
         if (res.isSuccess()) {
-            doctorTable.refresh();
+            doctorTable.setItems(FXCollections.observableArrayList(doctorService.getDoctors()));
             updateIdField.clear();
             updateNameField.clear();
             updateSpecialistField.clear();

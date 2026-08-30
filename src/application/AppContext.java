@@ -1,7 +1,9 @@
 package application;
 
 import services.LoginService;
+import services.MedicalService;
 import services.StaffService;
+import model.Dashboard;
 import services.DoctorService;
 import services.PatientService;
 
@@ -12,12 +14,14 @@ public class AppContext {
 	private final StaffService staffService;
 	private final DoctorService doctorService;
 	private final PatientService patientService;
+	private final MedicalService medicalService;
 	
 	private AppContext() {
 		this.loginService = new LoginService();
 		this.staffService = new StaffService();
 		this.doctorService = new DoctorService();
 		this.patientService = new PatientService();
+		this.medicalService = new MedicalService();
 	}
 	
 	
@@ -30,5 +34,6 @@ public class AppContext {
 	public StaffService getStaffService() { return staffService; }
 	public DoctorService getDoctorService() { return doctorService; }
     public PatientService getPatientService() { return patientService; }
+    public MedicalService getMedicalService() { return medicalService; }
 	
 }

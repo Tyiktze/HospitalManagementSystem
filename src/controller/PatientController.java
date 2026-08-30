@@ -91,6 +91,8 @@ public class PatientController {
         colSex.setCellValueFactory(new PropertyValueFactory<>("sex"));
         colAdmitStatus.setCellValueFactory(new PropertyValueFactory<>("admitStatus"));
         colAge.setCellValueFactory(new PropertyValueFactory<>("age")); 
+
+        patientTable.setItems(FXCollections.observableArrayList(patientService.getPatients()));
     }
 
     private void hideAll() {
@@ -123,7 +125,7 @@ public class PatientController {
         );
         patientLog.setText(res.getMessage());
         if (res.isSuccess()) {
-            patientTable.refresh();
+            patientTable.setItems(FXCollections.observableArrayList(patientService.getPatients()));
             idField.setText(patientService.getPatientId());
             nameField.clear();
             diseaseField.clear();
@@ -157,7 +159,7 @@ public class PatientController {
         OperationResult<Void> res = patientService.removePatient(selectedPatient);
         patientLog.setText(res.getMessage());
         if (res.isSuccess()) {
-            patientTable.refresh();
+            patientTable.setItems(FXCollections.observableArrayList(patientService.getPatients()));
             patientRemoveDetails.setText("");
             removeIdField.clear();
             selectedPatient = null;
@@ -203,7 +205,7 @@ public class PatientController {
         );
         patientLog.setText(res.getMessage());
         if (res.isSuccess()) {
-            patientTable.refresh();
+            patientTable.setItems(FXCollections.observableArrayList(patientService.getPatients()));
             updateIdField.clear();
             updateNameField.clear();
             updateDiseaseField.clear();

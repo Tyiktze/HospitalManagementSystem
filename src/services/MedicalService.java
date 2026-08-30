@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MedicalService {
-    private List<Medical> medicals = new ArrayList<>();
+	private List<Medical> medicals = new ArrayList<>();
     //model
     public MedicalService() {
         medicals.add(new Medical("Paracetamol", "Pfizer", "12/2025", 10, 100));
         medicals.add(new Medical("Ibuprofen", "GSK", "06/2025", 15, 200));
         medicals.add(new Medical("Cough Syrup", "Johnson & Johnson", "09/2024", 25, 50));
-        medicals.add(new Medical("Antibiotic", "Novartis", "03/2026", 30, 80));
-        medicals.add(new Medical("Vitamin C", "Bayer", "01/2025", 5, 500));
+        medicals.add(new Medical("Antibiotic", "Novartis", "03/2026", 30, 5));
+        medicals.add(new Medical("Vitamin C", "Bayer", "01/2025", 5, 10));
     }
 
     public List<Medical> getAll() {

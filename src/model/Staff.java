@@ -1,19 +1,18 @@
 package model;
 
-public class Staff {
+public class Staff extends Person {
 	//Attributes
-	private String id;
-	private String name;
 	private String designation;
 	private String sex;
 	private int salary;
 	
 	//Constructors
-	public Staff() {}
+	public Staff() {
+		super();
+	}
 	
 	public Staff(String id, String name, String designation, String sex, int salary) {
-		this.id = id;
-		this.name = name;
+		super(id, name);
 		this.designation = designation;
 		this.sex = sex;
 		this.salary = salary;
@@ -24,8 +23,6 @@ public class Staff {
 	public void showStaffInfo() {
 		System.out.printf("[%s]\t[%s]\t[%s]\t[%s]\t[%d]%n",
 		        id, name, designation, sex, salary);
-		
-		
 	}
 	
 	//Returns a string
@@ -36,14 +33,13 @@ public class Staff {
                 + "\nSex: " + sex
                 + "\nSalary: " + salary);
 	}
+
+	@Override
+	public String getDetails() {
+		return getStaffInfo();
+	}
 	
 	//Getters & Setters
-	public String getId() {return id;}
-	public void setId(String id) {this.id = id;}
-	
-	public String getName() { return name; }
-	public void setName(String name) { this.name = name; }
-	
 	public String getDesignation() { return designation; }
 	public void setDesignation(String designation) { this.designation = designation; }
 
@@ -52,5 +48,4 @@ public class Staff {
 
 	public int getSalary() { return salary; }
 	public void setSalary(int salary) { this.salary = salary; }
-
 }

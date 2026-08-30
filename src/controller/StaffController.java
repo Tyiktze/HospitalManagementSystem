@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -47,7 +48,7 @@ public class StaffController {
     @FXML
     private TextField designationField;
     @FXML
-    private TextField sexField;
+    private ComboBox<String> sexField;
     @FXML
     private TextField salaryField;
     
@@ -56,6 +57,8 @@ public class StaffController {
     private TextField removeIdField;
     @FXML
     private Label staffRemoveDetails;
+    @FXML
+    private javafx.scene.control.Button btnConfirmRemoveStaff;
     
     //Update fields
     @FXML
@@ -69,7 +72,7 @@ public class StaffController {
     @FXML
     private TextField updateDesignationField;
     @FXML
-    private TextField updateSexField;
+    private ComboBox<String> updateSexField;
     @FXML
     private TextField updateSalaryField;
 
@@ -85,7 +88,7 @@ public class StaffController {
     @FXML
     private TextField searchDesignationField;
     @FXML
-    private TextField searchSexField;
+    private ComboBox<String> searchSexField;
     @FXML
     private TextField searchSalaryField;
    
@@ -124,6 +127,9 @@ public class StaffController {
         searchStaff.managedProperty().bind(searchStaff.visibleProperty());
         removeStaff.managedProperty().bind(removeStaff.visibleProperty());
         updateStaff.managedProperty().bind(updateStaff.visibleProperty());
+        if (btnConfirmRemoveStaff != null) {
+            btnConfirmRemoveStaff.managedProperty().bind(btnConfirmRemoveStaff.visibleProperty());
+        }
         
         //Table mapping
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -131,6 +137,12 @@ public class StaffController {
         colDesignation.setCellValueFactory(new PropertyValueFactory<>("designation"));
         colSex.setCellValueFactory(new PropertyValueFactory<>("sex"));
         colSalary.setCellValueFactory(new PropertyValueFactory<>("salary"));
+        
+        staffTable.setItems(FXCollections.observableArrayList(staffService.getStaff()));
+        
+        sexField.setItems(FXCollections.observableArrayList("Male", "Female"));
+        updateSexField.setItems(FXCollections.observableArrayList("Male", "Female"));
+        searchSexField.setItems(FXCollections.observableArrayList("Male", "Female"));
     }
     
     //Hide all windows and allow one to show
@@ -155,6 +167,7 @@ public class StaffController {
         hideAll();
         addStaff.setVisible(true);
         idField.setText(staffService.getStaffId());
+        sexField.getSelectionModel().clearSelection();
     }
 
     @FXML
@@ -163,18 +176,18 @@ public class StaffController {
 					    		    idField.getText(),
 					    		    nameField.getText(),
 					    		    designationField.getText(),
-					    		    sexField.getText(),
+					    		    sexField.getValue(),
 					    		    salaryField.getText());
     	
     	staffLog.setText(res.getMessage());
     	
     	if (res.isSuccess()) {
-    		staffTable.refresh();
+    		staffTable.setItems(FXCollections.observableArrayList(staffService.getStaff()));
     		
     		idField.setText(staffService.getStaffId());
             nameField.clear();
             designationField.clear();
-            sexField.clear();
+            sexField.getSelectionModel().clearSelection();
             salaryField.clear();
     	}
     }
@@ -184,6 +197,12 @@ public class StaffController {
     public void removeStaffClicked(ActionEvent event){
     	hideAll();
     	removeStaff.setVisible(true);
+    	if (btnConfirmRemoveStaff != null) {
+    		btnConfirmRemoveStaff.setVisible(false);
+    	}
+    	staffRemoveDetails.setText("");
+    	removeIdField.clear();
+    	selectedStaff = null;
     }
     
     @FXML
@@ -193,11 +212,18 @@ public class StaffController {
 
         if(!res.isSuccess()){
         	staffRemoveDetails.setText(res.getMessage());
+        	if (btnConfirmRemoveStaff != null) {
+        		btnConfirmRemoveStaff.setVisible(false);
+        	}
+        	selectedStaff = null;
             return;
         }
         
         selectedStaff = res.getData();
         staffRemoveDetails.setText(selectedStaff.getStaffInfo());
+        if (btnConfirmRemoveStaff != null) {
+        	btnConfirmRemoveStaff.setVisible(true);
+        }
     }
     
     @FXML
@@ -207,9 +233,12 @@ public class StaffController {
     	OperationResult<Void> res = staffService.removeStaff(selectedStaff);
     	staffLog.setText(res.getMessage());
     	if (res.isSuccess()) {
-    		staffTable.refresh();
+    		staffTable.setItems(FXCollections.observableArrayList(staffService.getStaff()));
     		staffRemoveDetails.setText("");
     		removeIdField.clear();
+    		if (btnConfirmRemoveStaff != null) {
+    			btnConfirmRemoveStaff.setVisible(false);
+    		}
     		selectedStaff = null;
     	}
     }
@@ -220,6 +249,7 @@ public class StaffController {
     	hideAll();
     	updateStaffInner.setVisible(false);
     	updateStaff.setVisible(true);
+    	updateSexField.getSelectionModel().clearSelection();
     }
     
     @FXML
@@ -239,7 +269,7 @@ public class StaffController {
         
         updateNameField.setText(selectedStaff.getName());
         updateDesignationField.setText(selectedStaff.getDesignation());
-        updateSexField.setText(selectedStaff.getSex());
+        updateSexField.setValue(selectedStaff.getSex());
         updateSalaryField.setText(
             String.valueOf(selectedStaff.getSalary())
         );
@@ -251,7 +281,7 @@ public class StaffController {
     	
     	String newName = updateNameField.getText();
     	String newDesignation = updateDesignationField.getText();
-    	String newSex = updateSexField.getText();
+    	String newSex = updateSexField.getValue();
     	String rawSalary = updateSalaryField.getText();
     	
     	OperationResult<Void> res = staffService.updateStaff(selectedStaff, newName, newDesignation, newSex, rawSalary);
@@ -259,12 +289,12 @@ public class StaffController {
     	staffLog.setText(res.getMessage());
     	
     	if(res.isSuccess()) {
-    		staffTable.refresh();
+    		staffTable.setItems(FXCollections.observableArrayList(staffService.getStaff()));
     		
     		updateIdField.clear();
         	updateNameField.clear();
             updateDesignationField.clear();
-            updateSexField.clear();
+            updateSexField.getSelectionModel().clearSelection();
             updateSalaryField.clear();
             staffUpdateDetails.setText("");
             
@@ -305,6 +335,7 @@ public class StaffController {
     public void searchStaffClicked(ActionEvent event) {
         hideAll();
         searchStaff.setVisible(true);
+        searchSexField.getSelectionModel().clearSelection();
     }
     
     @FXML
@@ -312,7 +343,7 @@ public class StaffController {
     	String id = searchIdField.getText();
     	String name = searchNameField.getText();
     	String designation = searchDesignationField.getText();
-    	String sex = searchSexField.getText();
+    	String sex = searchSexField.getValue();
     	String rawSalary = searchSalaryField.getText();
     	
     	OperationResult<ArrayList<Staff>> res = staffService.searchStaff(id, name, designation, sex, rawSalary);
@@ -332,7 +363,7 @@ public class StaffController {
     	searchIdField.clear();
     	searchNameField.clear();
     	searchDesignationField.clear();
-    	searchSexField.clear();
+    	searchSexField.getSelectionModel().clearSelection();
     	searchSalaryField.clear();
     	
     	hideAll();

@@ -1,18 +1,17 @@
 package model;
 
-public class Doctor {
-    private String id;
-    private String name;
+public class Doctor extends Person {
     private String specialist;
     private String workTime;
     private String qualification;
     private int room; 
 
-    public Doctor() {}
+    public Doctor() {
+        super();
+    }
 
     public Doctor(String id, String name, String specialist, String workTime, String qualification, int room) {
-        this.id = id;
-        this.name = name;
+        super(id, name);
         this.specialist = specialist;
         this.workTime = workTime;
         this.qualification = qualification;
@@ -29,13 +28,12 @@ public class Doctor {
                 id, name, specialist, workTime, qualification, room);
     }
 
+    @Override
+    public String getDetails() {
+        return getDoctorInfo();
+    }
+
     // Getters & Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
-
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
-
     public String getSpecialist() { return specialist; }
     public void setSpecialist(String specialist) { this.specialist = specialist; }
 
