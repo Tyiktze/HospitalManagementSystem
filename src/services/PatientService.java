@@ -41,6 +41,7 @@ public class PatientService {
 
         Integer age = InputValidator.parseInteger(rawAge);
         if (age == null) return new OperationResult<>(false, "Age must be a number.", null);
+        if (!InputValidator.isNonNegative(age)) return new OperationResult<>(false, "Age cannot be negative.", null);
 
         Patient patient = new Patient(id, name, disease, sex, admitStatus, age);
         patientList.add(patient);
@@ -63,10 +64,11 @@ public class PatientService {
         if (disease != null && !disease.isBlank()) patient.setDisease(disease);
         if (sex != null && !sex.isBlank()) patient.setSex(sex);
         if (admitStatus != null && !admitStatus.isBlank()) patient.setAdmitStatus(admitStatus);
-        
+
         if (rawAge != null && !rawAge.isBlank()) {
             Integer age = InputValidator.parseInteger(rawAge);
             if (age == null) return new OperationResult<>(false, "Age must be a number.", null);
+            if (!InputValidator.isNonNegative(age)) return new OperationResult<>(false, "Age cannot be negative.", null);
             patient.setAge(age);
         }
         return new OperationResult<>(true, "Patient " + patient.getId() + " updated.", null);
@@ -83,10 +85,11 @@ public class PatientService {
     public OperationResult<ArrayList<Patient>> searchPatient(String id, String name, String disease, String sex, String admitStatus, String rawAge) {
         ArrayList<Patient> result = new ArrayList<>();
         Integer age = null;
-        
+
         if (rawAge != null && !rawAge.isBlank()) {
             age = InputValidator.parseInteger(rawAge);
             if (age == null) return new OperationResult<>(false, "Age must be a number.", null);
+            if (!InputValidator.isNonNegative(age)) return new OperationResult<>(false, "Age cannot be negative.", null);
         }
 
         for (Patient p : patientList) {
