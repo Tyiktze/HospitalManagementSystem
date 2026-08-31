@@ -25,20 +25,6 @@ public class Staff extends Person {
 		        id, name, designation, sex, salary);
 	}
 	
-	//Returns a string
-	public String getStaffInfo() {
-		return ("ID: " + id
-                + "\nName: " + name
-                + "\nDesignation: " + designation
-                + "\nSex: " + sex
-                + "\nSalary: " + salary);
-	}
-
-	@Override
-	public String getDetails() {
-		return getStaffInfo();
-	}
-	
 	//Getters & Setters
 	public String getDesignation() { return designation; }
 	public void setDesignation(String designation) { this.designation = designation; }

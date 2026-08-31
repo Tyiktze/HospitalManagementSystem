@@ -4,8 +4,7 @@ import model.OperationResult;
 import model.Staff;
 import utils.IDCalculator;
 import utils.InputValidator;
-
-import java.lang.reflect.Field;
+import utils.SearchParser;
 import java.util.ArrayList;
 
 
@@ -35,20 +34,10 @@ public class StaffService {
 		return staffList;
 	}
 	
-	public ArrayList<String> getColumns() {
-		ArrayList<String> arr = new ArrayList<>();
-		Class<?> current = Staff.class;
-		while (current != null && current != Object.class) {
-			Field[] fields = current.getDeclaredFields();
-			for (Field field : fields) {
-				arr.add(field.getName());
-			}
-			current = current.getSuperclass();
-		}
-		return arr;
-	}
-	
 	public OperationResult<Void> addStaff(String newId, String newName, String newDesignation, String newSex, String rawSalary) {
+		for (Staff staff : staffList) {
+			if (newId.equalsIgnoreCase(staff.getId())) return new OperationResult<>(false, "Staff ID " + newId + " already exists.", null);
+		}
 		if (newName == null || newName.isBlank()) return new OperationResult<>(false, "Please enter a name", null);
 		if (newDesignation == null || newDesignation.isBlank()) return new OperationResult<>(false, "Please enter a designation", null);
 		if (newSex == null || newSex.isBlank()) return new OperationResult<>(false, "Please enter a sex", null);
@@ -91,51 +80,85 @@ public class StaffService {
     	return new OperationResult<>(true, "Staff " + staff.getId() + " updated.", null);
 	}
 	
-	public OperationResult<Staff> findStaff(String id) {
-		if (id == null || id.isBlank()) return new OperationResult<>(false, "Please enter an ID", null);
-		
-		for (Staff staff: staffList) {
-			if (id.equalsIgnoreCase(staff.getId())) return new OperationResult<>(true, "Staff found", staff);
-		}
-		
-		return new OperationResult<>(false, "Staff not found", null);
-	}
 	
-	
-	public OperationResult<ArrayList<Staff>> searchStaff(String id, String name, String designation, String sex, String rawSalary) {
+	public OperationResult<ArrayList<Staff>> searchStaff(String searchField) {
 		ArrayList<Staff> result = new ArrayList<>();
-		Integer salary = null;
 		
-		if(rawSalary != null && !rawSalary.isBlank()) {
-	        salary = InputValidator.parseInteger(rawSalary);
-
-	        if(salary == null) {
-	            return new OperationResult<>(false, "Salary must be a number.", null);
-	        }
-	    }
-		
-		for (Staff staff: staffList) {
-			boolean match = true;
-			
-			if (id != null && !id.isBlank() 
-					&& !id.equalsIgnoreCase(staff.getId())) match = false;
-			
-			if (name != null && !name.isBlank()
-					&& !staff.getName().toLowerCase().contains(name.toLowerCase())) match = false;
-			
-			if (designation != null && !designation.isBlank()
-					&& !staff.getDesignation().toLowerCase().contains(designation.toLowerCase())) match = false;
-			
-			if (sex != null && !sex.isBlank()
-					&& !sex.equalsIgnoreCase(staff.getSex())) match = false;
-			
-			if (salary != null
-					&& !salary.equals(staff.getSalary())) match = false;
-			
-			if (match) result.add(staff);
+		if (searchField == null || searchField.trim().isEmpty()) {
+			result.addAll(staffList);
+			return new OperationResult<>(true, "Search successful, " + result.size() + " entries found.", result);
 		}
+
+		ArrayList<String> query = SearchParser.parseSearch(searchField);
 		
+		String id = null;
+		String name = null;
+		String designation = null;
+		String sex = null;
+		Integer salary = null;
+		String generic = null;
+
+		for (int i = 0; i < query.size(); i += 2) {
+			String key = query.get(i);
+			String value = query.get(i + 1);
+
+			if (key.equalsIgnoreCase("ID")) {
+				id = value;
+			} else if (key.equalsIgnoreCase("NAME")) {
+				name = value;
+			} else if (key.equalsIgnoreCase("DESIGNATION")) {
+				designation = value;
+			} else if (key.equalsIgnoreCase("SEX")) {
+				sex = value;
+			} else if (key.equalsIgnoreCase("SALARY")) {
+				salary = InputValidator.parseInteger(value);
+				if (salary == null) {
+					return new OperationResult<>(false, "Salary must be a number.", null);
+				}
+			} else if (key.equalsIgnoreCase("GENERIC")) {
+				generic = value.toLowerCase();
+			}
+		}
+
+		for (Staff staff : staffList) {
+			boolean match = true;
+
+			if (generic != null && !generic.isBlank()) {
+				boolean genericMatch = staff.getId().toLowerCase().contains(generic)
+						|| staff.getName().toLowerCase().contains(generic)
+						|| staff.getDesignation().toLowerCase().contains(generic)
+						|| staff.getSex().toLowerCase().contains(generic)
+						|| String.valueOf(staff.getSalary()).contains(generic);
+				if (!genericMatch) {
+					match = false;
+				}
+			}
+
+			if (id != null && !id.isBlank() && !id.equalsIgnoreCase(staff.getId())) {
+				match = false;
+			}
+
+			if (name != null && !name.isBlank() && !staff.getName().toLowerCase().contains(name.toLowerCase())) {
+				match = false;
+			}
+
+			if (designation != null && !designation.isBlank() && !staff.getDesignation().toLowerCase().contains(designation.toLowerCase())) {
+				match = false;
+			}
+
+			if (sex != null && !sex.isBlank() && !sex.equalsIgnoreCase(staff.getSex())) {
+				match = false;
+			}
+
+			if (salary != null && !salary.equals(staff.getSalary())) {
+				match = false;
+			}
+
+			if (match) {
+				result.add(staff);
+			}
+		}
+
 		return new OperationResult<>(true, "Search successful, " + result.size() + " entries found.", result);
 	}
-	
 }

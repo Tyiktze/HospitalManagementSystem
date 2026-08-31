@@ -28,7 +28,6 @@ public class Patient extends Person {
                 id, name, disease, sex, admitStatus, age);
     }
 
-    @Override
     public String getDetails() {
         return getPatientInfo();
     }

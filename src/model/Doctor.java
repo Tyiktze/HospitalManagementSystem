@@ -28,7 +28,6 @@ public class Doctor extends Person {
                 id, name, specialist, workTime, qualification, room);
     }
 
-    @Override
     public String getDetails() {
         return getDoctorInfo();
     }

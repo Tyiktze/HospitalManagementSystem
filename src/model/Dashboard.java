@@ -3,9 +3,6 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-import services.MedicalService;
-import services.PatientService;
-
 public class Dashboard {
 	private int totalPatients;
 	private int availableBeds;
