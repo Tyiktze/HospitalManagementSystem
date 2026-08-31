@@ -53,6 +53,8 @@ public class LoginController {
 			}
 		} else {
 			checkMsg.setText("Invalid Username or Password!");
+			txtUsername.setText(null);
+			txtPassword.setText(null);
 		}
 		
 		

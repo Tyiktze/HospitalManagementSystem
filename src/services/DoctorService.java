@@ -8,6 +8,7 @@ import utils.InputValidator;
 import java.util.ArrayList;
 
 public class DoctorService {
+	private static final int MAX_DOCTORS = 25;
     private final ArrayList<Doctor> doctorList;
     private int nextId;
 
@@ -34,6 +35,9 @@ public class DoctorService {
     }
 
     public OperationResult<Void> addDoctor(String id, String name, String specialist, String workTime, String qualification, String rawRoom) {
+    	if (doctorList.size() >= MAX_DOCTORS) {
+            return new OperationResult<>(false, "Cannot add doctor. Hospital capacity reached (Max 25).", null);
+        }
         if (name == null || name.isBlank()) return new OperationResult<>(false, "Please enter a name", null);
         if (specialist == null || specialist.isBlank()) return new OperationResult<>(false, "Please enter a specialist", null);
         if (workTime == null || workTime.isBlank()) return new OperationResult<>(false, "Please enter work time", null);

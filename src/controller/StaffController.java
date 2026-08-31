@@ -16,9 +16,6 @@ import model.OperationResult;
 import model.Staff;
 import services.StaffService;
 
-
-import javafx.scene.control.ListCell;
-
 public class StaffController {
 
     @FXML
@@ -74,20 +71,7 @@ public class StaffController {
         colSex.setCellValueFactory(new PropertyValueFactory<>("sex"));
         colSalary.setCellValueFactory(new PropertyValueFactory<>("salary"));
 
-        sexField.setItems(FXCollections.observableArrayList("Male", "Female"));
-        sexField.setPromptText("Select Gender");
-
-        sexField.setButtonCell(new ListCell<String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText("Select Gender");
-                } else {
-                    setText(item);
-                }
-            }
-        });
+        sexField.setItems(FXCollections.observableArrayList("Select Gender", "Male", "Female"));
 
         idField.setText(staffService.getStaffId());
         displayAllStaff();
@@ -214,7 +198,7 @@ public class StaffController {
         nameField.clear();
         designationField.clear();
         sexField.getSelectionModel().clearSelection();
-        sexField.setValue(null);
+        sexField.setValue("Select Gender");
         salaryField.clear();
 
         selectedStaff = null;

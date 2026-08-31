@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FacilityService {
+	private static final int MAX_FACILITY = 20;
     private List<Facility> facilities = new ArrayList<>();
     //model
     public FacilityService() {
@@ -21,6 +22,9 @@ public class FacilityService {
     }
 
     public OperationResult<Void> add(Facility facility) {
+    	if (facilities.size() >= MAX_FACILITY) {
+            return new OperationResult<>(false, "Cannot add Facility. Inventory capacity reached (Max 20).", null);
+        }
         if (facility == null) {
             return new OperationResult<>(false, "Facility cannot be null.", null);
         }

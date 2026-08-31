@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MedicalService {
+	private static final int MAX_MEDICAL = 100;
 	private List<Medical> medicals = new ArrayList<>();
     //model
     public MedicalService() {
@@ -21,6 +22,9 @@ public class MedicalService {
     }
 
     public OperationResult<Void> add(Medical medical) {
+    	if (medicals.size() >= MAX_MEDICAL) {
+            return new OperationResult<>(false, "Cannot add medicine. Inventory capacity reached (Max 100).", null);
+        }
         if (medical == null) {
             return new OperationResult<>(false, "Medical item cannot be null.", null);
         }
