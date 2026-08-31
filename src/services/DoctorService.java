@@ -38,9 +38,10 @@ public class DoctorService {
         if (specialist == null || specialist.isBlank()) return new OperationResult<>(false, "Please enter a specialist", null);
         if (workTime == null || workTime.isBlank()) return new OperationResult<>(false, "Please enter work time", null);
         if (qualification == null || qualification.isBlank()) return new OperationResult<>(false, "Please enter qualification", null);
-        
+
         Integer room = InputValidator.parseInteger(rawRoom);
         if (room == null) return new OperationResult<>(false, "Room must be a number.", null);
+        if (!InputValidator.isNonNegative(room)) return new OperationResult<>(false, "Room number cannot be negative.", null);
 
         Doctor doctor = new Doctor(id, name, specialist, workTime, qualification, room);
         doctorList.add(doctor);
@@ -67,6 +68,7 @@ public class DoctorService {
         if (rawRoom != null && !rawRoom.isBlank()) {
             Integer room = InputValidator.parseInteger(rawRoom);
             if (room == null) return new OperationResult<>(false, "Room must be a number.", null);
+            if (!InputValidator.isNonNegative(room)) return new OperationResult<>(false, "Room number cannot be negative.", null);
             doctor.setRoom(room);
         }
         return new OperationResult<>(true, "Doctor " + doctor.getId() + " updated.", null);
