@@ -1,9 +1,6 @@
 package controller;
 
 import application.AppContext;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -11,8 +8,6 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.util.Duration;
-import utils.DateAndTime;
 
 import java.util.ArrayList;
 import java.util.List;

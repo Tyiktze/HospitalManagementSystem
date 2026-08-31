@@ -6,7 +6,7 @@
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="400.0" prefWidth="220.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SidebarController">
+<VBox prefHeight="400.0" prefWidth="230.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SidebarController">
    <children>
       <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="18.0" prefWidth="201.0" text="HOSPITAL MANAGEMENT SYSTEM" />
       <Separator prefWidth="200.0" />

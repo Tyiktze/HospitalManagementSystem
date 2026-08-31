@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LabService {
+	private static final int MAX_LABS = 20;
     private List<Lab> labs = new ArrayList<>();
     //model
     public LabService() {
@@ -21,6 +22,9 @@ public class LabService {
     }
 
     public OperationResult<Void> add(Lab lab) {
+    	if (labs.size() >= MAX_LABS) {
+            return new OperationResult<>(false, "Cannot add lab. Hospital capacity reached (Max 25).", null);
+        }
         if (lab == null) {
             return new OperationResult<>(false, "Lab cannot be null.", null);
         }

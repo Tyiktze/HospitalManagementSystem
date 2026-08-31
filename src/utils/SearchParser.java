@@ -4,15 +4,11 @@ import java.util.ArrayList;
 
 public class SearchParser {
 
-    /**
-     * Parses the search input string using only ArrayLists.
-     * 
-     * If input contains key-value pairs (e.g. "ID:S001, Name:Teoh"):
-     * Returns: ["ID", "S001", "Name", "Teoh"] (alternating key, value)
-     * 
-     * If input is generic (e.g. "Teoh"):
-     * Returns: ["GENERIC", "Teoh"]
-     */
+    // Took some time to do this pls use it
+    // Parses the search input string from search String 
+    // "ID:S001, Name:Teoh" returns: ["ID", "S001", "Name", "Teoh"] 
+    // "Teoh" returns: ["GENERIC", "Teoh"]
+     
     public static ArrayList<String> parseSearch(String text) {
         ArrayList<String> parsedArray = new ArrayList<>();
 
