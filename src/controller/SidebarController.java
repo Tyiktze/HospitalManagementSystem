@@ -33,19 +33,19 @@ public class SidebarController {
 	// Event Listener on Button.onAction
 	@FXML
 	public void medicalClicked(ActionEvent event) {
-		System.out.println("Medical page");
+		mainController.loadPage("Medical.fxml");
 
 	}
 	// Event Listener on Button.onAction
 	@FXML
 	public void laboratoriesClicked(ActionEvent event) {
-		System.out.println("Laboratories page");
+		mainController.loadPage("Lab.fxml");
 
 	}
 	// Event Listener on Button.onAction
 	@FXML
 	public void facilitiesClicked(ActionEvent event) {
-		System.out.println("Facilities page");
+		mainController.loadPage("Facility.fxml");
 
 	}
 	// Event Listener on Button.onAction
