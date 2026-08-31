@@ -27,7 +27,6 @@ import services.StaffService;
 
 public class DashboardController {
 
-    @FXML private Label dateLabel;
     @FXML private Label totalPatientsLabel;
     @FXML private Label availableBedsLabel;
     @FXML private Label totalStaffLabel;
@@ -51,13 +50,6 @@ public class DashboardController {
     @FXML private TableColumn<Medical, String> countColumn;
     
     @FXML public void initialize() {
-        dateLabel.setText(DateAndTime.getFormattedDateTime());// Set the initial date and time
-        Timeline clock = new Timeline(new KeyFrame(Duration.seconds(1), event -> {  // Create a timeline that follows the real world time
-            dateLabel.setText(DateAndTime.getFormattedDateTime());
-        }));
-        
-        clock.setCycleCount(Animation.INDEFINITE); // Keep running indefinitely
-        clock.play();// Start the clock
         
         this.patientService = AppContext.getInstance().getPatientService();
         this.medicalService = AppContext.getInstance().getMedicalService();

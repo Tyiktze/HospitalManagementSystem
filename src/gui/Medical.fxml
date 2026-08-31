@@ -23,7 +23,7 @@
                text="Medical Management"
                BorderPane.alignment="CENTER">
             <font>
-                <Font size="24.0" />
+                <Font name="Berlin Sans FB" size="24.0" />
             </font>
             <BorderPane.margin>
                 <Insets top="15.0" bottom="10.0" />
