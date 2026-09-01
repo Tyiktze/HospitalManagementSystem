@@ -7,8 +7,10 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -36,11 +38,11 @@
 
             <Label text="Search:" />
 
-            <TextField fx:id="searchTextField" prefWidth="300.0" promptText="Search by ID or Name..." />
+            <TextField fx:id="searchTextField" prefWidth="300.0" promptText="KEY:VALUE, ... or VALUE" />
 
-            <Button fx:id="searchBtn" onAction="#handleSearch" text="Search" />
+            <Button onAction="#handleSearch" text="Search" />
 
-            <Button fx:id="displayAllBtn" onAction="#handleDisplayAll" text="Display All" />
+            <Button onAction="#handleDisplayAll" text="Display All" />
 
          </HBox>
 
@@ -48,17 +50,17 @@
 
             <columns>
 
-               <TableColumn fx:id="idCol" prefWidth="80.0" text="Doctor ID" />
+               <TableColumn fx:id="idCol" prefWidth="80.0" text="ID" />
 
                <TableColumn fx:id="nameCol" prefWidth="150.0" text="Name" />
 
-               <TableColumn fx:id="specialistCol" prefWidth="150.0" text="Specialization" />
+               <TableColumn fx:id="specialistCol" prefWidth="150.0" text="Specialise" />
 
-               <TableColumn fx:id="timingCol" prefWidth="120.0" text="Timing" />
+               <TableColumn fx:id="timingCol" prefWidth="120.0" text="WorkTime" />
 
                <TableColumn fx:id="qualificationCol" prefWidth="120.0" text="Qualification" />
 
-               <TableColumn fx:id="roomCol" prefWidth="80.0" text="Room No" />
+               <TableColumn fx:id="roomCol" prefWidth="80.0" text="Room" />
 
             </columns>
 
@@ -89,6 +91,17 @@
             <Label text="Room No:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
             <TextField fx:id="roomField" prefWidth="200.0" promptText="e.g. 11" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <columnConstraints>
+               <ColumnConstraints />
+               <ColumnConstraints />
+               <ColumnConstraints />
+               <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
 
          </GridPane>
 

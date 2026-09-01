@@ -8,8 +8,10 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -37,7 +39,7 @@
 
             <Label text="Search:" />
 
-            <TextField fx:id="searchTextField" prefWidth="300.0" promptText="Search by ID, Name or Disease..." />
+            <TextField fx:id="searchTextField" prefWidth="300.0" promptText="KEY:VALUE, ... or VALUE" />
 
             <Button fx:id="searchBtn" onAction="#handleSearch" text="Search" />
 
@@ -49,15 +51,15 @@
 
             <columns>
 
-               <TableColumn fx:id="idCol" prefWidth="80.0" text="Patient ID" />
+               <TableColumn fx:id="idCol" prefWidth="80.0" text="ID" />
 
                <TableColumn fx:id="nameCol" prefWidth="160.0" text="Name" />
 
                <TableColumn fx:id="diseaseCol" prefWidth="160.0" text="Disease" />
 
-               <TableColumn fx:id="genderCol" prefWidth="80.0" text="Gender" />
+               <TableColumn fx:id="genderCol" prefWidth="80.0" text="Sex" />
 
-               <TableColumn fx:id="admitStatusCol" prefWidth="120.0" text="Admit Status" />
+               <TableColumn fx:id="admitStatusCol" prefWidth="120.0" text="AdmitStatus" />
 
                <TableColumn fx:id="ageCol" prefWidth="80.0" text="Age" />
 
@@ -79,9 +81,9 @@
 
             <TextField fx:id="diseaseTextField" prefWidth="200.0" promptText="e.g. Hypertension" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-            <Label text="Gender:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label text="Sex:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
-            <ComboBox fx:id="genderComboBox" prefWidth="200.0" promptText="Select Gender" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <ComboBox fx:id="sexComboBox" prefWidth="200.0" promptText="Select Gender" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
             <Label text="Admit Status:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
 
@@ -90,6 +92,17 @@
             <Label text="Age:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
             <TextField fx:id="ageTextField" prefWidth="200.0" promptText="Enter age" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+            <columnConstraints>
+               <ColumnConstraints />
+               <ColumnConstraints />
+               <ColumnConstraints />
+               <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints />
+               <RowConstraints />
+               <RowConstraints />
+            </rowConstraints>
 
          </GridPane>
 

@@ -28,7 +28,7 @@ public class LabService {
         if (labs.size() >= MAX_LABS) {
             return new OperationResult<>(
                     false,
-                    "Cannot add lab. Hospital capacity reached (Max 20).",
+                    "Cannot add lab. Hospital capacity reached (Max 25).",
                     null);
         }
 

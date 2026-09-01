@@ -38,10 +38,16 @@ public class PatientService {
     	if (patientList.size() >= MAX_PATIENTS) {
             return new OperationResult<>(false, "Cannot add patient. Patient capacity reached (Max 100).", null);
         }
+        if (id == null || id.isBlank()) return new OperationResult<>(false, "Please enter a valid Patient ID", null);
+        for (Patient p : patientList) {
+            if (id.equalsIgnoreCase(p.getId())) {
+                return new OperationResult<>(false, "Patient ID " + id + " already exists.", null);
+            }
+        }
         if (name == null || name.isBlank()) return new OperationResult<>(false, "Please enter a name", null);
         if (disease == null || disease.isBlank()) return new OperationResult<>(false, "Please enter a disease", null);
-        if (sex == null || sex.isBlank()) return new OperationResult<>(false, "Please enter sex", null);
-        if (admitStatus == null || admitStatus.isBlank()) return new OperationResult<>(false, "Please enter admit status", null);
+        if (sex == null || sex.isBlank() || sex.equalsIgnoreCase("Select Gender")) return new OperationResult<>(false, "Please enter sex", null);
+        if (admitStatus == null || admitStatus.isBlank() || admitStatus.equalsIgnoreCase("Select Status")) return new OperationResult<>(false, "Please enter admit status", null);
 
         Integer age = InputValidator.parseInteger(rawAge);
         if (age == null) return new OperationResult<>(false, "Age must be a number.", null);
@@ -64,17 +70,19 @@ public class PatientService {
     public OperationResult<Void> updatePatient(Patient patient, String name, String disease, String sex, String admitStatus, String rawAge) {
         if (patient == null) return new OperationResult<>(false, "Patient not found.", null);
 
-        if (name != null && !name.isBlank()) patient.setName(name);
-        if (disease != null && !disease.isBlank()) patient.setDisease(disease);
-        if (sex != null && !sex.isBlank()) patient.setSex(sex);
-        if (admitStatus != null && !admitStatus.isBlank()) patient.setAdmitStatus(admitStatus);
-
+        Integer age = null;
         if (rawAge != null && !rawAge.isBlank()) {
-            Integer age = InputValidator.parseInteger(rawAge);
+            age = InputValidator.parseInteger(rawAge);
             if (age == null) return new OperationResult<>(false, "Age must be a number.", null);
             if (!InputValidator.isNonNegative(age)) return new OperationResult<>(false, "Age cannot be negative.", null);
-            patient.setAge(age);
         }
+
+        if (name != null && !name.isBlank()) patient.setName(name);
+        if (disease != null && !disease.isBlank()) patient.setDisease(disease);
+        if (sex != null && !sex.isBlank() && !sex.equalsIgnoreCase("Select Gender")) patient.setSex(sex);
+        if (admitStatus != null && !admitStatus.isBlank() && !admitStatus.equalsIgnoreCase("Select Status")) patient.setAdmitStatus(admitStatus);
+        if (age != null) patient.setAge(age);
+
         return new OperationResult<>(true, "Patient " + patient.getId() + " updated.", null);
     }
 
@@ -86,26 +94,85 @@ public class PatientService {
         return new OperationResult<>(false, "Patient not found", null);
     }
 
-    public OperationResult<ArrayList<Patient>> searchPatient(String id, String name, String disease, String sex, String admitStatus, String rawAge) {
+    public OperationResult<ArrayList<Patient>> searchPatient(String searchField) {
         ArrayList<Patient> result = new ArrayList<>();
-        Integer age = null;
 
-        if (rawAge != null && !rawAge.isBlank()) {
-            age = InputValidator.parseInteger(rawAge);
-            if (age == null) return new OperationResult<>(false, "Age must be a number.", null);
-            if (!InputValidator.isNonNegative(age)) return new OperationResult<>(false, "Age cannot be negative.", null);
+        if (searchField == null || searchField.trim().isEmpty()) {
+            result.addAll(patientList);
+            return new OperationResult<>(true, "Search successful, " + result.size() + " entries found.", result);
+        }
+
+        ArrayList<String> query = utils.SearchParser.parseSearch(searchField);
+
+        String id = null;
+        String name = null;
+        String disease = null;
+        String sex = null;
+        String admitStatus = null;
+        Integer age = null;
+        String generic = null;
+
+        for (int i = 0; i < query.size(); i += 2) {
+            String key = query.get(i);
+            String value = query.get(i + 1);
+
+            if (key.equalsIgnoreCase("ID")) {
+                id = value;
+            } else if (key.equalsIgnoreCase("NAME")) {
+                name = value;
+            } else if (key.equalsIgnoreCase("DISEASE")) {
+                disease = value;
+            } else if (key.equalsIgnoreCase("SEX") || key.equalsIgnoreCase("GENDER")) {
+                sex = value;
+            } else if (key.equalsIgnoreCase("ADMITSTATUS") || key.equalsIgnoreCase("STATUS")) {
+                admitStatus = value;
+            } else if (key.equalsIgnoreCase("AGE")) {
+                age = InputValidator.parseInteger(value);
+                if (age == null) {
+                    return new OperationResult<>(false, "Age must be a number.", null);
+                }
+            } else if (key.equalsIgnoreCase("GENERIC")) {
+                generic = value.toLowerCase();
+            }
         }
 
         for (Patient p : patientList) {
             boolean match = true;
-            if (id != null && !id.isBlank() && !id.equalsIgnoreCase(p.getId())) match = false;
-            if (name != null && !name.isBlank() && !p.getName().toLowerCase().contains(name.toLowerCase())) match = false;
-            if (disease != null && !disease.isBlank() && !p.getDisease().toLowerCase().contains(disease.toLowerCase())) match = false;
-            if (sex != null && !sex.isBlank() && !p.getSex().toLowerCase().contains(sex.toLowerCase())) match = false;
-            if (admitStatus != null && !admitStatus.isBlank() && !p.getAdmitStatus().toLowerCase().contains(admitStatus.toLowerCase())) match = false;
-            if (age != null && !age.equals(p.getAge())) match = false;
+
+            if (generic != null && !generic.isBlank()) {
+                boolean genericMatch = p.getId().toLowerCase().contains(generic)
+                        || p.getName().toLowerCase().contains(generic)
+                        || p.getDisease().toLowerCase().contains(generic)
+                        || p.getSex().toLowerCase().contains(generic)
+                        || p.getAdmitStatus().toLowerCase().contains(generic)
+                        || String.valueOf(p.getAge()).contains(generic);
+                if (!genericMatch) {
+                    match = false;
+                }
+            }
+
+            if (id != null && !id.isBlank() && !id.equalsIgnoreCase(p.getId())) {
+                match = false;
+            }
+            if (name != null && !name.isBlank() && !p.getName().toLowerCase().contains(name.toLowerCase())) {
+                match = false;
+            }
+            if (disease != null && !disease.isBlank() && !p.getDisease().toLowerCase().contains(disease.toLowerCase())) {
+                match = false;
+            }
+            if (sex != null && !sex.isBlank() && !p.getSex().equalsIgnoreCase(sex)) {
+                match = false;
+            }
+            if (admitStatus != null && !admitStatus.isBlank() && !p.getAdmitStatus().equalsIgnoreCase(admitStatus)) {
+                match = false;
+            }
+            if (age != null && !age.equals(p.getAge())) {
+                match = false;
+            }
             
-            if (match) result.add(p);
+            if (match) {
+                result.add(p);
+            }
         }
         return new OperationResult<>(true, "Search successful, " + result.size() + " entries found.", result);
     }

@@ -15,7 +15,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import model.OperationResult;
 import model.Patient;
 import services.PatientService;
-import utils.SearchParser;
 
 public class PatientController {
 
@@ -32,7 +31,7 @@ public class PatientController {
     @FXML private TextField patientIdTextField;
     @FXML private TextField nameTextField;
     @FXML private TextField diseaseTextField;
-    @FXML private ComboBox<String> genderComboBox;
+    @FXML private ComboBox<String> sexComboBox;
     @FXML private ComboBox<String> admitStatusComboBox;
     @FXML private TextField ageTextField;
 
@@ -52,8 +51,8 @@ public class PatientController {
         admitStatusCol.setCellValueFactory(new PropertyValueFactory<>("admitStatus"));
         ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
 
-        genderComboBox.setItems(FXCollections.observableArrayList("Male", "Female"));
-        admitStatusComboBox.setItems(FXCollections.observableArrayList("Admitted", "Discharged"));
+        sexComboBox.setItems(FXCollections.observableArrayList("Select Gender", "Male", "Female"));
+        admitStatusComboBox.setItems(FXCollections.observableArrayList("Select Status", "Admitted", "Discharged"));
 
         patientIdTextField.setText(patientService.getPatientId());
         displayAllPatients();
@@ -64,7 +63,7 @@ public class PatientController {
                 patientIdTextField.setText(newVal.getId());
                 nameTextField.setText(newVal.getName());
                 diseaseTextField.setText(newVal.getDisease());
-                genderComboBox.setValue(newVal.getSex());
+                sexComboBox.setValue(newVal.getSex());
                 admitStatusComboBox.setValue(newVal.getAdmitStatus());
                 ageTextField.setText(String.valueOf(newVal.getAge()));
             }
@@ -77,7 +76,7 @@ public class PatientController {
                 patientIdTextField.getText(),
                 nameTextField.getText(),
                 diseaseTextField.getText(),
-                genderComboBox.getValue(),
+                sexComboBox.getValue(),
                 admitStatusComboBox.getValue(),
                 ageTextField.getText()
         );
@@ -98,7 +97,7 @@ public class PatientController {
                 selectedPatient,
                 nameTextField.getText(),
                 diseaseTextField.getText(),
-                genderComboBox.getValue(),
+                sexComboBox.getValue(),
                 admitStatusComboBox.getValue(),
                 ageTextField.getText()
         );
@@ -125,42 +124,21 @@ public class PatientController {
     }
 
     @FXML
-public void handleSearch(ActionEvent event) {
-    ArrayList<String> parsed = SearchParser.parseSearch(searchTextField.getText());
+    public void handleSearch(ActionEvent event) {
+        String keyword = searchTextField.getText().trim();
 
-    if (parsed.isEmpty()) {
-        handleDisplayAll(event);
-        return;
-    }
-
-    ArrayList<Patient> result = new ArrayList<>(patientService.getPatients());
-
-    for (int i = 0; i < parsed.size() - 1; i += 2) {
-        String key = parsed.get(i).toLowerCase();
-        String value = parsed.get(i + 1).toLowerCase();
-
-        ArrayList<Patient> filtered = new ArrayList<>();
-        for (Patient p : result) {
-            boolean match = switch (key) {
-                case "id" -> p.getId().toLowerCase().contains(value);
-                case "name" -> p.getName().toLowerCase().contains(value);
-                case "disease" -> p.getDisease().toLowerCase().contains(value);
-                case "gender", "sex" -> p.getSex().toLowerCase().contains(value);
-                case "admitstatus" -> p.getAdmitStatus().toLowerCase().contains(value);
-                case "age" -> String.valueOf(p.getAge()).equals(value);
-                case "generic" -> p.getId().toLowerCase().contains(value)
-                        || p.getName().toLowerCase().contains(value)
-                        || p.getDisease().toLowerCase().contains(value);
-                default -> true;
-            };
-            if (match) filtered.add(p);
+        if (keyword.isEmpty()) {
+            handleDisplayAll(event);
+            return;
         }
-        result = filtered;
-    }
 
-    patientTable.setItems(FXCollections.observableArrayList(result));
-    patientLog.setText("Search successful, " + result.size() + " entries found.");
-}
+        OperationResult<ArrayList<Patient>> result = patientService.searchPatient(keyword);
+        patientLog.setText(result.getMessage());
+
+        if (result.isSuccess()) {
+            patientTable.setItems(FXCollections.observableArrayList(result.getData()));
+        }
+    }
 
     @FXML
     public void handleDisplayAll(ActionEvent event) {
@@ -183,8 +161,10 @@ public void handleSearch(ActionEvent event) {
         patientIdTextField.setText(patientService.getPatientId());
         nameTextField.clear();
         diseaseTextField.clear();
-        genderComboBox.getSelectionModel().clearSelection();
+        sexComboBox.getSelectionModel().clearSelection();
+        sexComboBox.setValue("Select Gender");
         admitStatusComboBox.getSelectionModel().clearSelection();
+        admitStatusComboBox.setValue("Select Status");
         ageTextField.clear();
         selectedPatient = null;
         patientTable.getSelectionModel().clearSelection();

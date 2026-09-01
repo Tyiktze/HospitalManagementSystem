@@ -38,6 +38,12 @@ public class DoctorService {
     	if (doctorList.size() >= MAX_DOCTORS) {
             return new OperationResult<>(false, "Cannot add doctor. Hospital capacity reached (Max 25).", null);
         }
+        if (id == null || id.isBlank()) return new OperationResult<>(false, "Please enter a valid Doctor ID", null);
+        for (Doctor doc : doctorList) {
+            if (id.equalsIgnoreCase(doc.getId())) {
+                return new OperationResult<>(false, "Doctor ID " + id + " already exists.", null);
+            }
+        }
         if (name == null || name.isBlank()) return new OperationResult<>(false, "Please enter a name", null);
         if (specialist == null || specialist.isBlank()) return new OperationResult<>(false, "Please enter a specialist", null);
         if (workTime == null || workTime.isBlank()) return new OperationResult<>(false, "Please enter work time", null);
@@ -64,17 +70,19 @@ public class DoctorService {
     public OperationResult<Void> updateDoctor(Doctor doctor, String name, String specialist, String workTime, String qualification, String rawRoom) {
         if (doctor == null) return new OperationResult<>(false, "Doctor not found.", null);
 
+        Integer room = null;
+        if (rawRoom != null && !rawRoom.isBlank()) {
+            room = InputValidator.parseInteger(rawRoom);
+            if (room == null) return new OperationResult<>(false, "Room must be a number.", null);
+            if (!InputValidator.isNonNegative(room)) return new OperationResult<>(false, "Room number cannot be negative.", null);
+        }
+
         if (name != null && !name.isBlank()) doctor.setName(name);
         if (specialist != null && !specialist.isBlank()) doctor.setSpecialist(specialist);
         if (workTime != null && !workTime.isBlank()) doctor.setWorkTime(workTime);
         if (qualification != null && !qualification.isBlank()) doctor.setQualification(qualification);
+        if (room != null) doctor.setRoom(room);
         
-        if (rawRoom != null && !rawRoom.isBlank()) {
-            Integer room = InputValidator.parseInteger(rawRoom);
-            if (room == null) return new OperationResult<>(false, "Room must be a number.", null);
-            if (!InputValidator.isNonNegative(room)) return new OperationResult<>(false, "Room number cannot be negative.", null);
-            doctor.setRoom(room);
-        }
         return new OperationResult<>(true, "Doctor " + doctor.getId() + " updated.", null);
     }
 
@@ -86,25 +94,85 @@ public class DoctorService {
         return new OperationResult<>(false, "Doctor not found", null);
     }
 
-    public OperationResult<ArrayList<Doctor>> searchDoctor(String id, String name, String specialist, String workTime, String qualification, String rawRoom) {
+    public OperationResult<ArrayList<Doctor>> searchDoctor(String searchField) {
         ArrayList<Doctor> result = new ArrayList<>();
+
+        if (searchField == null || searchField.trim().isEmpty()) {
+            result.addAll(doctorList);
+            return new OperationResult<>(true, "Search successful, " + result.size() + " entries found.", result);
+        }
+
+        ArrayList<String> query = utils.SearchParser.parseSearch(searchField);
+
+        String id = null;
+        String name = null;
+        String specialist = null;
+        String workTime = null;
+        String qualification = null;
         Integer room = null;
-        
-        if (rawRoom != null && !rawRoom.isBlank()) {
-            room = InputValidator.parseInteger(rawRoom);
-            if (room == null) return new OperationResult<>(false, "Room must be a number.", null);
+        String generic = null;
+
+        for (int i = 0; i < query.size(); i += 2) {
+            String key = query.get(i);
+            String value = query.get(i + 1);
+
+            if (key.equalsIgnoreCase("ID")) {
+                id = value;
+            } else if (key.equalsIgnoreCase("NAME")) {
+                name = value;
+            } else if (key.equalsIgnoreCase("SPECIALIST")) {
+                specialist = value;
+            } else if (key.equalsIgnoreCase("TIMING") || key.equalsIgnoreCase("WORKTIME")) {
+                workTime = value;
+            } else if (key.equalsIgnoreCase("QUALIFICATION")) {
+                qualification = value;
+            } else if (key.equalsIgnoreCase("ROOM")) {
+                room = InputValidator.parseInteger(value);
+                if (room == null) {
+                    return new OperationResult<>(false, "Room must be a number.", null);
+                }
+            } else if (key.equalsIgnoreCase("GENERIC")) {
+                generic = value.toLowerCase();
+            }
         }
 
         for (Doctor doc : doctorList) {
             boolean match = true;
-            if (id != null && !id.isBlank() && !id.equalsIgnoreCase(doc.getId())) match = false;
-            if (name != null && !name.isBlank() && !doc.getName().toLowerCase().contains(name.toLowerCase())) match = false;
-            if (specialist != null && !specialist.isBlank() && !doc.getSpecialist().toLowerCase().contains(specialist.toLowerCase())) match = false;
-            if (workTime != null && !workTime.isBlank() && !doc.getWorkTime().toLowerCase().contains(workTime.toLowerCase())) match = false;
-            if (qualification != null && !qualification.isBlank() && !doc.getQualification().toLowerCase().contains(qualification.toLowerCase())) match = false;
-            if (room != null && !room.equals(doc.getRoom())) match = false;
-            
-            if (match) result.add(doc);
+
+            if (generic != null && !generic.isBlank()) {
+                boolean genericMatch = doc.getId().toLowerCase().contains(generic)
+                        || doc.getName().toLowerCase().contains(generic)
+                        || doc.getSpecialist().toLowerCase().contains(generic)
+                        || doc.getWorkTime().toLowerCase().contains(generic)
+                        || doc.getQualification().toLowerCase().contains(generic)
+                        || String.valueOf(doc.getRoom()).contains(generic);
+                if (!genericMatch) {
+                    match = false;
+                }
+            }
+
+            if (id != null && !id.isBlank() && !id.equalsIgnoreCase(doc.getId())) {
+                match = false;
+            }
+            if (name != null && !name.isBlank() && !doc.getName().toLowerCase().contains(name.toLowerCase())) {
+                match = false;
+            }
+            if (specialist != null && !specialist.isBlank() && !doc.getSpecialist().toLowerCase().contains(specialist.toLowerCase())) {
+                match = false;
+            }
+            if (workTime != null && !workTime.isBlank() && !doc.getWorkTime().toLowerCase().contains(workTime.toLowerCase())) {
+                match = false;
+            }
+            if (qualification != null && !qualification.isBlank() && !doc.getQualification().toLowerCase().contains(qualification.toLowerCase())) {
+                match = false;
+            }
+            if (room != null && !room.equals(doc.getRoom())) {
+                match = false;
+            }
+
+            if (match) {
+                result.add(doc);
+            }
         }
         return new OperationResult<>(true, "Search successful, " + result.size() + " entries found.", result);
     }
