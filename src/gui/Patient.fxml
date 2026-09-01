@@ -71,11 +71,11 @@
 
             <TextField fx:id="patientIdTextField" editable="false" prefWidth="200.0" promptText="Auto-generated" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-            <Label text="Full Name:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+            <Label text="Name:" GridPane.columnIndex="2" GridPane.rowIndex="0" />
 
             <TextField fx:id="nameTextField" prefWidth="200.0" promptText="Enter patient name" GridPane.columnIndex="3" GridPane.rowIndex="0" />
 
-            <Label text="Disease / Diagnosis:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+            <Label text="Disease:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
             <TextField fx:id="diseaseTextField" prefWidth="200.0" promptText="e.g. Hypertension" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
