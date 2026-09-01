@@ -23,14 +23,36 @@ public class FacilityService {
     }
 
     public OperationResult<Void> add(Facility facility) {
-    	if (facilities.size() >= MAX_FACILITY) {
-            return new OperationResult<>(false, "Cannot add Facility. Inventory capacity reached (Max 20).", null);
+
+        if (facilities.size() >= MAX_FACILITY) {
+            return new OperationResult<>(
+                    false,
+                    "Cannot add Facility. Inventory capacity reached (Max 20).",
+                    null);
         }
+
         if (facility == null) {
-            return new OperationResult<>(false, "Facility cannot be null.", null);
+            return new OperationResult<>(
+                    false,
+                    "Facility cannot be null.",
+                    null);
         }
+
+        for (Facility existing : facilities) {
+            if (existing.getFacility().equalsIgnoreCase(facility.getFacility())) {
+                return new OperationResult<>(
+                        false,
+                        "Duplicate facility entry.",
+                        null);
+            }
+        }
+
         facilities.add(facility);
-        return new OperationResult<>(true, "Facility added successfully.", null);
+
+        return new OperationResult<>(
+                true,
+                "Facility added successfully.",
+                null);
     }
 
     public OperationResult<Void> delete(Facility facility) {

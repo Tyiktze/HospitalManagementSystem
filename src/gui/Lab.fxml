@@ -52,7 +52,7 @@
 
                 <TextField fx:id="searchField"
                            prefWidth="300.0"
-                           promptText="Laboratory name" />
+                           promptText="KEY:VALUE, ... or VALUE"/>
 
                 <Button text="Search"
                         onAction="#searchLabClicked" />

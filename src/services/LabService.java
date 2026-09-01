@@ -24,14 +24,36 @@ public class LabService {
     }
 
     public OperationResult<Void> add(Lab lab) {
-    	if (labs.size() >= MAX_LABS) {
-            return new OperationResult<>(false, "Cannot add lab. Hospital capacity reached (Max 25).", null);
+
+        if (labs.size() >= MAX_LABS) {
+            return new OperationResult<>(
+                    false,
+                    "Cannot add lab. Hospital capacity reached (Max 20).",
+                    null);
         }
+
         if (lab == null) {
-            return new OperationResult<>(false, "Lab cannot be null.", null);
+            return new OperationResult<>(
+                    false,
+                    "Lab cannot be null.",
+                    null);
         }
+
+        for (Lab existing : labs) {
+            if (existing.getLab().equalsIgnoreCase(lab.getLab())) {
+                return new OperationResult<>(
+                        false,
+                        "Duplicate lab entry.",
+                        null);
+            }
+        }
+
         labs.add(lab);
-        return new OperationResult<>(true, "Lab added successfully.", null);
+
+        return new OperationResult<>(
+                true,
+                "Lab added successfully.",
+                null);
     }
 
     public OperationResult<Void> delete(Lab lab) {

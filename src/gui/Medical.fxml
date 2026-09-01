@@ -45,10 +45,9 @@
                   spacing="10.0">
 
                 <Label text="Search:" />
-
+                
                 <TextField fx:id="searchField"
-                           prefWidth="300.0"
-                           promptText="Medicine name or manufacturer" />
+                promptText="KEY:VALUE, ... or VALUE" />
 
                 <Button text="Search"
                         onAction="#searchMedicalClicked" />

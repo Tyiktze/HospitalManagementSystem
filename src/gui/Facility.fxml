@@ -49,11 +49,11 @@
                   spacing="10.0">
 
                 <Label text="Search:" />
-
+                
                 <TextField fx:id="searchField"
-                           prefWidth="300.0"
-                           promptText="Facility name" />
-
+                prefWidth="300.0"
+                promptText="KEY:VALUE, ... or VALUE" />
+    
                 <Button text="Search"
                         onAction="#searchFacilityClicked" />
 

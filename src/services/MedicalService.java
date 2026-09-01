@@ -24,16 +24,39 @@ public class MedicalService {
     }
 
     public OperationResult<Void> add(Medical medical) {
-    	if (medicals.size() >= MAX_MEDICAL) {
-            return new OperationResult<>(false, "Cannot add medicine. Inventory capacity reached (Max 100).", null);
-        }
-        if (medical == null) {
-            return new OperationResult<>(false, "Medical item cannot be null.", null);
-        }
-        medicals.add(medical);
-        return new OperationResult<>(true, "Medical item added successfully.", null);
-    }
 
+        if (medicals.size() >= MAX_MEDICAL) {
+            return new OperationResult<>(
+                    false,
+                    "Cannot add medicine. Inventory capacity reached (Max 100).",
+                    null);
+        }
+
+        if (medical == null) {
+            return new OperationResult<>(
+                    false,
+                    "Medical item cannot be null.",
+                    null);
+        }
+
+        for (Medical existing : medicals) {
+            if (existing.getName().equalsIgnoreCase(medical.getName())
+                    && existing.getManufacturer().equalsIgnoreCase(medical.getManufacturer())) {
+
+                return new OperationResult<>(
+                        false,
+                        "Duplicate medical entry.",
+                        null);
+            }
+        }
+
+        medicals.add(medical);
+
+        return new OperationResult<>(
+                true,
+                "Medical item added successfully.",
+                null);
+    }
     public OperationResult<Void> delete(Medical medical) {
         if (medical == null || !medicals.contains(medical)) {
             return new OperationResult<>(false, "Medical item not found.", null);
