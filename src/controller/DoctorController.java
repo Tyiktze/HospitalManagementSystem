@@ -119,28 +119,45 @@ public class DoctorController {
             clearFields();
         }
     }
+@FXML
+public void handleSearch(ActionEvent event) {
+    ArrayList<String> parsed = SearchParser.parseSearch(searchTextField.getText());
 
-    @FXML
-    public void handleSearch(ActionEvent event) {
-        String keyword = searchTextField.getText() == null ? "" : searchTextField.getText().trim();
-        if (keyword.isEmpty()) {
-            displayAllDoctors();
-            doctorLog.setText("Displaying all doctors.");
-            return;
-        }
-        ArrayList<Doctor> result = new ArrayList<>();
-        for (Doctor d : doctorService.getDoctors()) {
-            if (d.getId().toLowerCase().contains(keyword.toLowerCase())
-                    || d.getName().toLowerCase().contains(keyword.toLowerCase())) {
-                result.add(d);
-            }
-        }
-        doctorTable.setItems(FXCollections.observableArrayList(result));
-        doctorLog.setText("Search successful, " + result.size() + " entries found.");
+    if (parsed.isEmpty()) {
+        handleDisplayAll(event);
+        return;
     }
 
+    ArrayList<Doctor> result = new ArrayList<>(doctorService.getDoctors());
+
+    for (int i = 0; i < parsed.size() - 1; i += 2) {
+        String key = parsed.get(i).toLowerCase();
+        String value = parsed.get(i + 1).toLowerCase();
+
+        ArrayList<Doctor> filtered = new ArrayList<>();
+        for (Doctor d : result) {
+            boolean match = switch (key) {
+                case "id" -> d.getId().toLowerCase().contains(value);
+                case "name" -> d.getName().toLowerCase().contains(value);
+                case "specialist" -> d.getSpecialist().toLowerCase().contains(value);
+                case "timing", "worktime" -> d.getWorkTime().toLowerCase().contains(value);
+                case "qualification" -> d.getQualification().toLowerCase().contains(value);
+                case "room" -> String.valueOf(d.getRoom()).equals(value);
+                case "generic" -> d.getId().toLowerCase().contains(value)
+                        || d.getName().toLowerCase().contains(value);
+                default -> true;
+            };
+            if (match) filtered.add(d);
+        }
+        result = filtered;
+    }
+
+    doctorTable.setItems(FXCollections.observableArrayList(result));
+    doctorLog.setText("Search successful, " + result.size() + " entries found.");
+}
+
     @FXML
-    public void handleRefresh(ActionEvent event) {
+    public void handleDisplayAll(ActionEvent event) {
         searchTextField.clear();
         displayAllDoctors();
         doctorLog.setText("Displaying all doctors.");
