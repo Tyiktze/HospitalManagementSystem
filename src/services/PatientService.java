@@ -101,7 +101,7 @@ public class PatientService {
             if (id != null && !id.isBlank() && !id.equalsIgnoreCase(p.getId())) match = false;
             if (name != null && !name.isBlank() && !p.getName().toLowerCase().contains(name.toLowerCase())) match = false;
             if (disease != null && !disease.isBlank() && !p.getDisease().toLowerCase().contains(disease.toLowerCase())) match = false;
-            if (sex != null && !sex.isBlank() && !sex.equalsIgnoreCase(p.getSex())) match = false;
+            if (sex != null && !sex.isBlank() && !p.getSex().toLowerCase().contains(sex.toLowerCase())) match = false;
             if (admitStatus != null && !admitStatus.isBlank() && !p.getAdmitStatus().toLowerCase().contains(admitStatus.toLowerCase())) match = false;
             if (age != null && !age.equals(p.getAge())) match = false;
             
