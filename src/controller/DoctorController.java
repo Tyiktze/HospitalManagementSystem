@@ -37,11 +37,6 @@ public class DoctorController {
     @FXML private TextField qualificationField;
     @FXML private TextField roomField;
 
-    @FXML private Button addBtn;
-    @FXML private Button updateBtn;
-    @FXML private Button deleteBtn;
-    @FXML private Button clearBtn;
-
     @FXML private Label doctorLog;
 
     private DoctorService doctorService;
