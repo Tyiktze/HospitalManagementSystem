@@ -1,6 +1,7 @@
 package controller;
 
-import java.util.List;
+import java.util.ArrayList;
+import application.AppContext;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -16,7 +17,7 @@ import services.LabService;
 
 public class LabController {
 
-    private static final LabService labService = new LabService();
+    private LabService labService;
 
     @FXML
     private TableView<Lab> labTable;
@@ -43,6 +44,8 @@ public class LabController {
 
     @FXML
     public void initialize() {
+
+        labService = AppContext.getInstance().getLabService();
 
         colLab.setCellValueFactory(
                 new PropertyValueFactory<>("lab"));
@@ -174,8 +177,7 @@ public class LabController {
     @FXML
     public void searchLabClicked(ActionEvent event) {
 
-        String keyword =
-                searchField.getText().trim().toLowerCase();
+        String keyword = searchField.getText().trim();
 
         if (keyword.isEmpty()) {
             displayAllLabs();
@@ -183,28 +185,17 @@ public class LabController {
             return;
         }
 
-        List<Lab> result =
-                labService.getAll()
-                        .stream()
-                        .filter(lab ->
-                                lab.getLab()
-                                        .toLowerCase()
-                                        .contains(keyword))
-                        .toList();
+        OperationResult<ArrayList<Lab>> result =
+                labService.searchLab(keyword);
 
-        labTable.setItems(
-                FXCollections.observableArrayList(result));
+        labLog.setText(result.getMessage());
 
-        if (result.isEmpty()) {
-            labLog.setText(
-                    "No matching laboratory item found.");
-        } else {
-            labLog.setText(
-                    result.size()
-                    + " matching laboratory item(s) found.");
+        if (result.isSuccess()) {
+            labTable.setItems(
+                    FXCollections.observableArrayList(result.getData()));
         }
     }
-
+    
     @FXML
     public void displayAllClicked(ActionEvent event) {
 

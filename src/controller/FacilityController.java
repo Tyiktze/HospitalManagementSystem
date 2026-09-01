@@ -1,6 +1,7 @@
 package controller;
 
-import java.util.List;
+import java.util.ArrayList;
+import application.AppContext;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -16,8 +17,7 @@ import services.FacilityService;
 
 public class FacilityController {
 
-    private static final FacilityService facilityService =
-            new FacilityService();
+	private FacilityService facilityService;
 
     @FXML
     private TableView<Facility> facilityTable;
@@ -38,6 +38,8 @@ public class FacilityController {
 
     @FXML
     public void initialize() {
+    	
+    	facilityService = AppContext.getInstance().getFacilityService();
 
         colFacility.setCellValueFactory(
                 new PropertyValueFactory<>("facility"));
@@ -133,38 +135,22 @@ public class FacilityController {
     @FXML
     public void searchFacilityClicked(ActionEvent event) {
 
-        String keyword =
-                searchField.getText()
-                        .trim()
-                        .toLowerCase();
+        String keyword = searchField.getText().trim();
 
         if (keyword.isEmpty()) {
             displayAllFacilities();
-
-            facilityLog.setText(
-                    "Displaying all facilities.");
+            facilityLog.setText("Displaying all facilities.");
             return;
         }
 
-        List<Facility> result =
-                facilityService.getAll()
-                        .stream()
-                        .filter(facility ->
-                                facility.getFacility()
-                                        .toLowerCase()
-                                        .contains(keyword))
-                        .toList();
+        OperationResult<ArrayList<Facility>> result =
+                facilityService.searchFacility(keyword);
 
-        facilityTable.setItems(
-                FXCollections.observableArrayList(result));
+        facilityLog.setText(result.getMessage());
 
-        if (result.isEmpty()) {
-            facilityLog.setText(
-                    "No matching facility found.");
-        } else {
-            facilityLog.setText(
-                    result.size()
-                    + " matching facility item(s) found.");
+        if (result.isSuccess()) {
+            facilityTable.setItems(
+                    FXCollections.observableArrayList(result.getData()));
         }
     }
 

@@ -1,6 +1,7 @@
 package services;
 
 import model.Facility;
+import utils.SearchParser;
 import model.OperationResult;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,5 +39,58 @@ public class FacilityService {
         }
         facilities.remove(facility);
         return new OperationResult<>(true, "Facility deleted successfully.", null);
+    }
+    public OperationResult<ArrayList<Facility>> searchFacility(String searchField) {
+
+        ArrayList<Facility> result = new ArrayList<>();
+
+        if (searchField == null || searchField.trim().isEmpty()) {
+            result.addAll(facilities);
+            return new OperationResult<>(
+                    true,
+                    "Search successful, " + result.size() + " entries found.",
+                    result);
+        }
+
+        ArrayList<String> query = SearchParser.parseSearch(searchField);
+
+        String facility = null;
+        String generic = null;
+
+        for (int i = 0; i < query.size(); i += 2) {
+            String key = query.get(i);
+            String value = query.get(i + 1);
+
+            if (key.equalsIgnoreCase("FACILITY")) {
+                facility = value;
+            } else if (key.equalsIgnoreCase("GENERIC")) {
+                generic = value.toLowerCase();
+            }
+        }
+
+        for (Facility item : facilities) {
+
+            boolean match = true;
+
+            if (generic != null && !generic.isBlank()
+                    && !item.getFacility().toLowerCase().contains(generic)) {
+                match = false;
+            }
+
+            if (facility != null && !facility.isBlank()
+                    && !item.getFacility().toLowerCase()
+                            .contains(facility.toLowerCase())) {
+                match = false;
+            }
+
+            if (match) {
+                result.add(item);
+            }
+        }
+
+        return new OperationResult<>(
+                true,
+                "Search successful, " + result.size() + " entries found.",
+                result);
     }
 }

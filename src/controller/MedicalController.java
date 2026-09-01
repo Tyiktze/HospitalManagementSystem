@@ -1,6 +1,7 @@
 package controller;
 
-import java.util.List;
+import java.util.ArrayList;
+import application.AppContext;
 
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -16,7 +17,7 @@ import services.MedicalService;
 
 public class MedicalController {
 
-    private static final MedicalService medicalService = new MedicalService();
+	private MedicalService medicalService;
 
     @FXML
     private TableView<Medical> medicalTable;
@@ -61,6 +62,7 @@ public class MedicalController {
 
     @FXML
     public void initialize() {
+    	medicalService = AppContext.getInstance().getMedicalService();
 
         colName.setCellValueFactory(
                 new PropertyValueFactory<>("name"));
@@ -224,39 +226,22 @@ public class MedicalController {
     @FXML
     public void searchMedicalClicked(ActionEvent event) {
 
-        String keyword =
-                searchField.getText().trim().toLowerCase();
+        String keyword = searchField.getText().trim();
 
         if (keyword.isEmpty()) {
             displayAllMedicals();
-            medicalLog.setText(
-                    "Displaying all medical items.");
+            medicalLog.setText("Displaying all medical items.");
             return;
         }
 
-        List<Medical> result =
-                medicalService.getAll()
-                        .stream()
-                        .filter(medical ->
-                                medical.getName()
-                                        .toLowerCase()
-                                        .contains(keyword)
-                                ||
-                                medical.getManufacturer()
-                                        .toLowerCase()
-                                        .contains(keyword))
-                        .toList();
+        OperationResult<ArrayList<Medical>> result =
+                medicalService.searchMedical(keyword);
 
-        medicalTable.setItems(
-                FXCollections.observableArrayList(result));
+        medicalLog.setText(result.getMessage());
 
-        if (result.isEmpty()) {
-            medicalLog.setText(
-                    "No matching medical item found.");
-        } else {
-            medicalLog.setText(
-                    result.size()
-                    + " matching medical item(s) found.");
+        if (result.isSuccess()) {
+            medicalTable.setItems(
+                    FXCollections.observableArrayList(result.getData()));
         }
     }
 

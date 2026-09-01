@@ -5,6 +5,8 @@ import services.MedicalService;
 import services.StaffService;
 import services.DoctorService;
 import services.PatientService;
+import services.LabService;
+import services.FacilityService;
 
 public class AppContext {
 	private static AppContext instance;
@@ -14,6 +16,8 @@ public class AppContext {
 	private final DoctorService doctorService;
 	private final PatientService patientService;
 	private final MedicalService medicalService;
+	private final LabService labService;
+    private final FacilityService facilityService;
 	
 	private AppContext() {
 		this.loginService = new LoginService();
@@ -21,6 +25,8 @@ public class AppContext {
 		this.doctorService = new DoctorService();
 		this.patientService = new PatientService();
 		this.medicalService = new MedicalService();
+		this.labService = new LabService();
+		this.facilityService = new FacilityService();
 	}
 	
 	
@@ -34,5 +40,6 @@ public class AppContext {
 	public DoctorService getDoctorService() { return doctorService; }
     public PatientService getPatientService() { return patientService; }
     public MedicalService getMedicalService() { return medicalService; }
-	
+    public LabService getLabService() {return labService;}
+    public FacilityService getFacilityService() {return facilityService;}
 }
