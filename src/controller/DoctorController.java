@@ -111,6 +111,7 @@ public class DoctorController {
         hideAll();
         addDoctor.setVisible(true);
         idField.setText(doctorService.getDoctorId());
+        idField.setEditable(false);
     }
 
     @FXML
@@ -127,6 +128,7 @@ public class DoctorController {
         if (res.isSuccess()) {
             doctorTable.setItems(FXCollections.observableArrayList(doctorService.getDoctors()));
             idField.setText(doctorService.getDoctorId());
+
             nameField.clear();
             specialistField.clear();
             workTimeField.clear();
