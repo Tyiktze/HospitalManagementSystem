@@ -183,8 +183,8 @@ public void handleSearch(ActionEvent event) {
         patientIdTextField.setText(patientService.getPatientId());
         nameTextField.clear();
         diseaseTextField.clear();
-        genderComboBox.setValue(null);
-        admitStatusComboBox.setValue(null);
+        genderComboBox.getSelectionModel().clearSelection();
+        admitStatusComboBox.getSelectionModel().clearSelection();
         ageTextField.clear();
         selectedPatient = null;
         patientTable.getSelectionModel().clearSelection();
