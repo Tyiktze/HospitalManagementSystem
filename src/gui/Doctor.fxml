@@ -80,13 +80,13 @@
 
             <Label text="Timing:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
-            <TextField fx:id="timingField" prefWidth="200.0" promptText="e.g. 09:00 - 17:00" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <TextField fx:id="timingField" prefWidth="200.0" promptText="e.g. 8-11AM" .../>
 
             <Label text="Qualification:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
 
             <TextField fx:id="qualificationField" prefWidth="200.0" promptText="e.g. MBBS, MD" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
-            <Label text="Room Number:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+            <Label text="Room No:" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
             <TextField fx:id="roomField" prefWidth="200.0" promptText="e.g. Room 101" GridPane.columnIndex="3" GridPane.rowIndex="2" />
 
