@@ -116,8 +116,8 @@
          </padding>
 
          <Label text="Log:" />
-         <!-- Note: Your original Patient.fxml didn't have a log label. I've added a generic one to match Staff.fxml visually. -->
-         <Label text="Patient system ready." />
+        
+         <Label fx:id="patientLog" text="Patient system ready." />
 
       </HBox>
    </bottom>
