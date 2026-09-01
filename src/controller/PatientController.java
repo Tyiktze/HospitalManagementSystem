@@ -111,6 +111,7 @@ public class PatientController {
         hideAll();
         addPatient.setVisible(true);
         idField.setText(patientService.getPatientId());
+        idField.setEditable(false);
     }
 
     @FXML
