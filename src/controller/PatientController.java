@@ -125,27 +125,45 @@ public class PatientController {
     }
 
     @FXML
-    public void handleSearch(ActionEvent event) {
-        String keyword = searchTextField.getText() == null ? "" : searchTextField.getText().trim();
-        if (keyword.isEmpty()) {
-            displayAllPatients();
-            patientLog.setText("Displaying all patients.");
-            return;
-        }
-        ArrayList<Patient> result = new ArrayList<>();
-        for (Patient p : patientService.getPatients()) {
-            if (p.getId().toLowerCase().contains(keyword.toLowerCase())
-                    || p.getName().toLowerCase().contains(keyword.toLowerCase())
-                    || p.getDisease().toLowerCase().contains(keyword.toLowerCase())) {
-                result.add(p);
-            }
-        }
-        patientTable.setItems(FXCollections.observableArrayList(result));
-        patientLog.setText("Search successful, " + result.size() + " entries found.");
+public void handleSearch(ActionEvent event) {
+    ArrayList<String> parsed = SearchParser.parseSearch(searchTextField.getText());
+
+    if (parsed.isEmpty()) {
+        handleDisplayAll(event);
+        return;
     }
 
+    ArrayList<Patient> result = new ArrayList<>(patientService.getPatients());
+
+    for (int i = 0; i < parsed.size() - 1; i += 2) {
+        String key = parsed.get(i).toLowerCase();
+        String value = parsed.get(i + 1).toLowerCase();
+
+        ArrayList<Patient> filtered = new ArrayList<>();
+        for (Patient p : result) {
+            boolean match = switch (key) {
+                case "id" -> p.getId().toLowerCase().contains(value);
+                case "name" -> p.getName().toLowerCase().contains(value);
+                case "disease" -> p.getDisease().toLowerCase().contains(value);
+                case "gender", "sex" -> p.getSex().toLowerCase().contains(value);
+                case "admitstatus" -> p.getAdmitStatus().toLowerCase().contains(value);
+                case "age" -> String.valueOf(p.getAge()).equals(value);
+                case "generic" -> p.getId().toLowerCase().contains(value)
+                        || p.getName().toLowerCase().contains(value)
+                        || p.getDisease().toLowerCase().contains(value);
+                default -> true;
+            };
+            if (match) filtered.add(p);
+        }
+        result = filtered;
+    }
+
+    patientTable.setItems(FXCollections.observableArrayList(result));
+    patientLog.setText("Search successful, " + result.size() + " entries found.");
+}
+
     @FXML
-    public void handleRefresh(ActionEvent event) {
+    public void handleDisplayAll(ActionEvent event) {
         searchTextField.clear();
         displayAllPatients();
         patientLog.setText("Displaying all patients.");
