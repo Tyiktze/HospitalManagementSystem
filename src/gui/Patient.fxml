@@ -41,7 +41,7 @@
 
             <Button fx:id="searchBtn" onAction="#handleSearch" text="Search" />
 
-            <Button fx:id="refreshBtn" onAction="#handleRefresh" text="Refresh" />
+            <Button fx:id="displayAllBtn" onAction="#handleDisplayAll" text="Display All" />
 
          </HBox>
 
