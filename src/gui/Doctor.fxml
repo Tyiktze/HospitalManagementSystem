@@ -80,7 +80,7 @@
 
             <Label text="Timing:" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
-            TextField fx:id="timingField" prefWidth="200.0" promptText="e.g. 8-11AM" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <TextField fx:id="timingField" prefWidth="200.0" promptText="e.g. 8-11AM" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
             <Label text="Qualification:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
 
