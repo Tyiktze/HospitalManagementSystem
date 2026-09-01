@@ -19,6 +19,8 @@ import utils.SearchParser;
 public class DoctorController {
 
     @FXML private TextField searchTextField;
+    @FXML private Button searchBtn;
+    @FXML private Button displayAllBtn;
 
     @FXML private TableView<Doctor> doctorTable;
     @FXML private TableColumn<Doctor, String> idCol;
@@ -34,6 +36,11 @@ public class DoctorController {
     @FXML private TextField timingField;
     @FXML private TextField qualificationField;
     @FXML private TextField roomField;
+
+    @FXML private Button addBtn;
+    @FXML private Button updateBtn;
+    @FXML private Button deleteBtn;
+    @FXML private Button clearBtn;
 
     @FXML private Label doctorLog;
 
