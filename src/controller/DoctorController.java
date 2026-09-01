@@ -14,6 +14,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import model.Doctor;
 import model.OperationResult;
 import services.DoctorService;
+import utils.SearchParser;
 
 public class DoctorController {
 
