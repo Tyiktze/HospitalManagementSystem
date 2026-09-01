@@ -14,161 +14,161 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="700.0" prefWidth="950.0" stylesheets="@../css/application.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.PatientController">
-    <children>
-        <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
-            <children>
-                <!-- Header Section -->
-                <AnchorPane prefHeight="60.0" styleClass="card-header">
-                    <children>
-                        <Label layoutX="14.0" layoutY="16.0" text="Patient Management" textFill="#2c3e50">
-                            <font>
-                                <Font name="System Bold" size="20.0" />
-                            </font>
+   <children>
+      <VBox spacing="15.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+         <children>
+            <!-- Header Section -->
+            <AnchorPane prefHeight="60.0" styleClass="card-header">
+               <children>
+                  <Label layoutX="14.0" layoutY="16.0" text="Patient Management" textFill="#2c3e50">
+                     <font>
+                        <Font name="System Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <HBox alignment="CENTER_RIGHT" layoutX="450.0" layoutY="13.0" spacing="10.0" AnchorPane.rightAnchor="14.0">
+                     <children>
+                        <TextField fx:id="searchTextField" prefHeight="35.0" prefWidth="250.0" promptText="Search by ID, Name or Disease..." styleClass="search-input" />
+                        <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#handleSearch" prefHeight="35.0" prefWidth="90.0" text="Search">
+                           <styleClass>
+                              <String fx:value="btn" />
+                              <String fx:value="btn-primary" />
+                           </styleClass>
+                        </Button>
+                        <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#handleRefresh" prefHeight="35.0" prefWidth="90.0" text="Refresh">
+                           <styleClass>
+                              <String fx:value="btn" />
+                              <String fx:value="btn-secondary" />
+                           </styleClass>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+
+            <!-- Main Content Area -->
+            <HBox spacing="15.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <!-- Form Card -->
+                  <VBox prefWidth="340.0" spacing="12.0" styleClass="card">
+                     <children>
+                        <Label text="Patient Details" textFill="#34495e">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
                         </Label>
-                        <HBox alignment="CENTER_RIGHT" layoutX="450.0" layoutY="13.0" spacing="10.0" AnchorPane.rightAnchor="14.0">
-                            <children>
-                                <TextField fx:id="searchField" prefHeight="35.0" prefWidth="250.0" promptText="Search by ID, Name or Disease..." styleClass="search-input" />
-                                <Button fx:id="searchBtn" mnemonicParsing="false" onAction="#handleSearch" prefHeight="35.0" prefWidth="90.0" text="Search">
-                                    <styleClass>
-                                        <String fx:value="btn" />
-                                        <String fx:value="btn-primary" />
-                                    </styleClass>
-                                </Button>
-                                <Button fx:id="refreshBtn" mnemonicParsing="false" onAction="#handleRefresh" prefHeight="35.0" prefWidth="90.0" text="Refresh">
-                                    <styleClass>
-                                        <String fx:value="btn" />
-                                        <String fx:value="btn-secondary" />
-                                    </styleClass>
-                                </Button>
-                            </children>
-                        </HBox>
-                    </children>
-                </AnchorPane>
-
-                <!-- Main Content Area -->
-                <HBox spacing="15.0" VBox.vgrow="ALWAYS">
-                    <children>
-                        <!-- Form Card -->
-                        <VBox prefWidth="340.0" spacing="12.0" styleClass="card">
-                            <children>
-                                <Label text="Patient Details" textFill="#34495e">
-                                    <font>
-                                        <Font name="System Bold" size="16.0" />
-                                    </font>
-                                </Label>
-
-                                <VBox spacing="4.0">
-                                    <children>
-                                        <Label text="Patient ID" textFill="#7f8c8d" />
-                                        <TextField fx:id="patientIdField" editable="false" prefHeight="35.0" promptText="Auto-generated" styleClass="form-control" />
-                                    </children>
-                                </VBox>
-
-                                <VBox spacing="4.0">
-                                    <children>
-                                        <Label text="Full Name *" textFill="#7f8c8d" />
-                                        <TextField fx:id="nameField" prefHeight="35.0" promptText="Enter patient name" styleClass="form-control" />
-                                    </children>
-                                </VBox>
-
-                                <VBox spacing="4.0">
-                                    <children>
-                                        <Label text="Disease / Diagnosis *" textFill="#7f8c8d" />
-                                        <TextField fx:id="diseaseField" prefHeight="35.0" promptText="e.g. Hypertension, Flu" styleClass="form-control" />
-                                    </children>
-                                </VBox>
-
-                                <VBox spacing="4.0">
-                                    <children>
-                                        <Label text="Gender *" textFill="#7f8c8d" />
-                                        <ComboBox fx:id="genderComboBox" maxWidth="1.7976931348623157E308" prefHeight="35.0" promptText="Select Gender" styleClass="form-control" />
-                                    </children>
-                                </VBox>
-
-                                <VBox spacing="4.0">
-                                    <children>
-                                        <Label text="Admit Status *" textFill="#7f8c8d" />
-                                        <ComboBox fx:id="admitStatusComboBox" maxWidth="1.7976931348623157E308" prefHeight="35.0" promptText="Select Status" styleClass="form-control" />
-                                    </children>
-                                </VBox>
-
-                                <VBox spacing="4.0">
-                                    <children>
-                                        <Label text="Age *" textFill="#7f8c8d" />
-                                        <TextField fx:id="ageField" prefHeight="35.0" promptText="Enter age" styleClass="form-control" />
-                                    </children>
-                                </VBox>
-
-                                <!-- Action Buttons -->
-                                <VBox spacing="8.0">
-                                    <VBox.margin>
-                                        <Insets top="10.0" />
-                                    </VBox.margin>
-                                    <children>
-                                        <HBox spacing="10.0">
-                                            <children>
-                                                <Button fx:id="addBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleAdd" prefHeight="35.0" text="Add" HBox.hgrow="ALWAYS">
-                                                    <styleClass>
-                                                        <String fx:value="btn" />
-                                                        <String fx:value="btn-success" />
-                                                    </styleClass>
-                                                </Button>
-                                                <Button fx:id="updateBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="35.0" text="Update" HBox.hgrow="ALWAYS">
-                                                    <styleClass>
-                                                        <String fx:value="btn" />
-                                                        <String fx:value="btn-warning" />
-                                                    </styleClass>
-                                                </Button>
-                                            </children>
-                                        </HBox>
-                                        <HBox spacing="10.0">
-                                            <children>
-                                                <Button fx:id="deleteBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDelete" prefHeight="35.0" text="Delete" HBox.hgrow="ALWAYS">
-                                                    <styleClass>
-                                                        <String fx:value="btn" />
-                                                        <String fx:value="btn-danger" />
-                                                    </styleClass>
-                                                </Button>
-                                                <Button fx:id="clearBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleClear" prefHeight="35.0" text="Clear" HBox.hgrow="ALWAYS">
-                                                    <styleClass>
-                                                        <String fx:value="btn" />
-                                                        <String fx:value="btn-secondary" />
-                                                    </styleClass>
-                                                </Button>
-                                            </children>
-                                        </HBox>
-                                    </children>
-                                </VBox>
-                            </children>
-                            <padding>
-                                <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-                            </padding>
+                        
+                        <VBox spacing="4.0">
+                           <children>
+                              <Label text="Patient ID" textFill="#7f8c8d" />
+                              <TextField fx:id="patientIdTextField" editable="false" prefHeight="35.0" promptText="Auto-generated" styleClass="form-control" />
+                           </children>
                         </VBox>
 
-                        <!-- Table Card -->
-                        <VBox styleClass="card" HBox.hgrow="ALWAYS">
-                            <children>
-                                <TableView fx:id="patientTable" VBox.vgrow="ALWAYS">
-                                    <columns>
-                                        <TableColumn fx:id="idCol" prefWidth="80.0" text="Patient ID" />
-                                        <TableColumn fx:id="nameCol" prefWidth="130.0" text="Name" />
-                                        <TableColumn fx:id="diseaseCol" prefWidth="120.0" text="Disease" />
-                                        <TableColumn fx:id="genderCol" prefWidth="80.0" text="Gender" />
-                                        <TableColumn fx:id="admitStatusCol" prefWidth="100.0" text="Admit Status" />
-                                        <TableColumn fx:id="ageCol" prefWidth="60.0" text="Age" />
-                                    </columns>
-                                    <columnResizePolicy>
-                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                    </columnResizePolicy>
-                                </TableView>
-                            </children>
-                            <padding>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                            </padding>
+                        <VBox spacing="4.0">
+                           <children>
+                              <Label text="Full Name *" textFill="#7f8c8d" />
+                              <TextField fx:id="nameTextField" prefHeight="35.0" promptText="Enter patient name" styleClass="form-control" />
+                           </children>
                         </VBox>
-                    </children>
-                </HBox>
-            </children>
-        </VBox>
-    </children>
+
+                        <VBox spacing="4.0">
+                           <children>
+                              <Label text="Disease / Diagnosis *" textFill="#7f8c8d" />
+                              <TextField fx:id="diseaseTextField" prefHeight="35.0" promptText="e.g. Hypertension, Flu" styleClass="form-control" />
+                           </children>
+                        </VBox>
+
+                        <VBox spacing="4.0">
+                           <children>
+                              <Label text="Gender *" textFill="#7f8c8d" />
+                              <ComboBox fx:id="genderComboBox" maxWidth="1.7976931348623157E308" prefHeight="35.0" promptText="Select Gender" styleClass="form-control" />
+                           </children>
+                        </VBox>
+
+                        <VBox spacing="4.0">
+                           <children>
+                              <Label text="Admit Status *" textFill="#7f8c8d" />
+                              <ComboBox fx:id="admitStatusComboBox" maxWidth="1.7976931348623157E308" prefHeight="35.0" promptText="Select Status" styleClass="form-control" />
+                           </children>
+                        </VBox>
+
+                        <VBox spacing="4.0">
+                           <children>
+                              <Label text="Age *" textFill="#7f8c8d" />
+                              <TextField fx:id="ageTextField" prefHeight="35.0" promptText="Enter age" styleClass="form-control" />
+                           </children>
+                        </VBox>
+
+                        <!-- Action Buttons -->
+                        <VBox spacing="8.0">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                           <children>
+                              <HBox spacing="10.0">
+                                 <children>
+                                    <Button fx:id="addBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleAdd" prefHeight="35.0" text="Add" HBox.hgrow="ALWAYS">
+                                       <styleClass>
+                                          <String fx:value="btn" />
+                                          <String fx:value="btn-success" />
+                                       </styleClass>
+                                    </Button>
+                                    <Button fx:id="updateBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleUpdate" prefHeight="35.0" text="Update" HBox.hgrow="ALWAYS">
+                                       <styleClass>
+                                          <String fx:value="btn" />
+                                          <String fx:value="btn-warning" />
+                                       </styleClass>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox spacing="10.0">
+                                 <children>
+                                    <Button fx:id="deleteBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleDelete" prefHeight="35.0" text="Delete" HBox.hgrow="ALWAYS">
+                                       <styleClass>
+                                          <String fx:value="btn" />
+                                          <String fx:value="btn-danger" />
+                                       </styleClass>
+                                    </Button>
+                                    <Button fx:id="clearBtn" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleClear" prefHeight="35.0" text="Clear" HBox.hgrow="ALWAYS">
+                                       <styleClass>
+                                          <String fx:value="btn" />
+                                          <String fx:value="btn-secondary" />
+                                       </styleClass>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                     </padding>
+                  </VBox>
+
+                  <!-- Table Card -->
+                  <VBox styleClass="card" HBox.hgrow="ALWAYS">
+                     <children>
+                        <TableView fx:id="patientTable" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="idCol" prefWidth="80.0" text="Patient ID" />
+                              <TableColumn fx:id="nameCol" prefWidth="130.0" text="Name" />
+                              <TableColumn fx:id="diseaseCol" prefWidth="120.0" text="Disease" />
+                              <TableColumn fx:id="genderCol" prefWidth="80.0" text="Gender" />
+                              <TableColumn fx:id="admitStatusCol" prefWidth="100.0" text="Admit Status" />
+                              <TableColumn fx:id="ageCol" prefWidth="60.0" text="Age" />
+                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </children>
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
 </AnchorPane>
