@@ -1,274 +1,173 @@
 package controller;
 
+import java.util.ArrayList;
+
+import application.AppContext;
+import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import java.util.ArrayList;
-import application.AppContext;
-import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import model.OperationResult;
 import model.Patient;
 import services.PatientService;
 
 public class PatientController {
 
-    @FXML private VBox mainContent;
-    @FXML private VBox welcome;
-    @FXML private GridPane addPatient;
-    @FXML private GridPane removePatient;
-    @FXML private GridPane updatePatient;
-    @FXML private GridPane findPatient;
-    @FXML private GridPane searchPatient;
-    @FXML private VBox displayPatient;
+    @FXML private TextField searchTextField;
 
-    // Add Fields
-    @FXML private TextField idField;
-    @FXML private TextField nameField;
-    @FXML private TextField diseaseField;
-    @FXML private TextField sexField;
-    @FXML private TextField admitStatusField;
-    @FXML private TextField ageField; 
-
-    // Remove Fields
-    @FXML private TextField removeIdField;
-    @FXML private Label patientRemoveDetails;
-
-    // Update Fields
-    @FXML private TextField updateIdField;
-    @FXML private Label patientUpdateDetails;
-    @FXML private GridPane updatePatientInner;
-    @FXML private TextField updateNameField;
-    @FXML private TextField updateDiseaseField;
-    @FXML private TextField updateSexField;
-    @FXML private TextField updateAdmitStatusField;
-    @FXML private TextField updateAgeField; 
-
-    // Find Field
-    @FXML private TextField findIdField;
-
-    // Search Fields
-    @FXML private TextField searchIdField;
-    @FXML private TextField searchNameField;
-    @FXML private TextField searchDiseaseField;
-    @FXML private TextField searchSexField;
-    @FXML private TextField searchAdmitStatusField;
-    @FXML private TextField searchAgeField; 
-
-    // Table
     @FXML private TableView<Patient> patientTable;
-    @FXML private TableColumn<Patient, String> colId;
-    @FXML private TableColumn<Patient, String> colName;
-    @FXML private TableColumn<Patient, String> colDisease;
-    @FXML private TableColumn<Patient, String> colSex;
-    @FXML private TableColumn<Patient, String> colAdmitStatus;
-    @FXML private TableColumn<Patient, Integer> colAge; 
+    @FXML private TableColumn<Patient, String> idCol;
+    @FXML private TableColumn<Patient, String> nameCol;
+    @FXML private TableColumn<Patient, String> diseaseCol;
+    @FXML private TableColumn<Patient, String> genderCol;
+    @FXML private TableColumn<Patient, String> admitStatusCol;
+    @FXML private TableColumn<Patient, Integer> ageCol;
 
-    // Log
+    @FXML private TextField patientIdTextField;
+    @FXML private TextField nameTextField;
+    @FXML private TextField diseaseTextField;
+    @FXML private ComboBox<String> genderComboBox;
+    @FXML private ComboBox<String> admitStatusComboBox;
+    @FXML private TextField ageTextField;
+
     @FXML private Label patientLog;
+
     private PatientService patientService;
     private Patient selectedPatient;
 
     @FXML
     public void initialize() {
         patientService = AppContext.getInstance().getPatientService();
-        welcome.managedProperty().bind(welcome.visibleProperty());
-        addPatient.managedProperty().bind(addPatient.visibleProperty());
-        findPatient.managedProperty().bind(findPatient.visibleProperty());
-        displayPatient.managedProperty().bind(displayPatient.visibleProperty());
-        searchPatient.managedProperty().bind(searchPatient.visibleProperty());
-        removePatient.managedProperty().bind(removePatient.visibleProperty());
-        updatePatient.managedProperty().bind(updatePatient.visibleProperty());
 
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colName.setCellValueFactory(new PropertyValueFactory<>("name"));
-        colDisease.setCellValueFactory(new PropertyValueFactory<>("disease"));
-        colSex.setCellValueFactory(new PropertyValueFactory<>("sex"));
-        colAdmitStatus.setCellValueFactory(new PropertyValueFactory<>("admitStatus"));
-        colAge.setCellValueFactory(new PropertyValueFactory<>("age")); 
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        diseaseCol.setCellValueFactory(new PropertyValueFactory<>("disease"));
+        genderCol.setCellValueFactory(new PropertyValueFactory<>("sex"));
+        admitStatusCol.setCellValueFactory(new PropertyValueFactory<>("admitStatus"));
+        ageCol.setCellValueFactory(new PropertyValueFactory<>("age"));
 
-        patientTable.setItems(FXCollections.observableArrayList(patientService.getPatients()));
-    }
+        genderComboBox.setItems(FXCollections.observableArrayList("Male", "Female"));
+        admitStatusComboBox.setItems(FXCollections.observableArrayList("Admitted", "Discharged"));
 
-    private void hideAll() {
-        welcome.setVisible(false);
-        addPatient.setVisible(false);
-        findPatient.setVisible(false);
-        searchPatient.setVisible(false);
-        displayPatient.setVisible(false);
-        removePatient.setVisible(false);
-        updatePatient.setVisible(false);
-    }
+        patientIdTextField.setText(patientService.getPatientId());
+        displayAllPatients();
 
-    
-    @FXML
-    public void addPatientClicked(ActionEvent event) {
-        hideAll();
-        addPatient.setVisible(true);
-        idField.setText(patientService.getPatientId());
-        idField.setEditable(false);
+        patientTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                selectedPatient = newVal;
+                patientIdTextField.setText(newVal.getId());
+                nameTextField.setText(newVal.getName());
+                diseaseTextField.setText(newVal.getDisease());
+                genderComboBox.setValue(newVal.getSex());
+                admitStatusComboBox.setValue(newVal.getAdmitStatus());
+                ageTextField.setText(String.valueOf(newVal.getAge()));
+            }
+        });
     }
 
     @FXML
-    public void btnAddPatientClicked(ActionEvent event) {
+    public void handleAdd(ActionEvent event) {
         OperationResult<Void> res = patientService.addPatient(
-                idField.getText(),
-                nameField.getText(),
-                diseaseField.getText(),
-                sexField.getText(),
-                admitStatusField.getText(),
-                ageField.getText()
+                patientIdTextField.getText(),
+                nameTextField.getText(),
+                diseaseTextField.getText(),
+                genderComboBox.getValue(),
+                admitStatusComboBox.getValue(),
+                ageTextField.getText()
         );
         patientLog.setText(res.getMessage());
         if (res.isSuccess()) {
-            patientTable.setItems(FXCollections.observableArrayList(patientService.getPatients()));
-            idField.setText(patientService.getPatientId());
-            nameField.clear();
-            diseaseField.clear();
-            sexField.clear();
-            admitStatusField.clear();
-            ageField.clear();
+            displayAllPatients();
+            clearFields();
         }
     }
 
     @FXML
-    public void removePatientClicked(ActionEvent event) {
-        hideAll();
-        removePatient.setVisible(true);
-    }
-
-    @FXML
-    public void btnRemovePatientClicked(ActionEvent event) {
-        String id = removeIdField.getText();
-        OperationResult<Patient> res = patientService.findPatient(id);
-        if (!res.isSuccess()) {
-            patientRemoveDetails.setText(res.getMessage());
+    public void handleUpdate(ActionEvent event) {
+        if (selectedPatient == null) {
+            patientLog.setText("Please select a patient to update.");
             return;
         }
-        selectedPatient = res.getData();
-        patientRemoveDetails.setText(selectedPatient.getPatientInfo());
+        OperationResult<Void> res = patientService.updatePatient(
+                selectedPatient,
+                nameTextField.getText(),
+                diseaseTextField.getText(),
+                genderComboBox.getValue(),
+                admitStatusComboBox.getValue(),
+                ageTextField.getText()
+        );
+        patientLog.setText(res.getMessage());
+        if (res.isSuccess()) {
+            patientTable.refresh();
+            displayAllPatients();
+            clearFields();
+        }
     }
 
     @FXML
-    public void btnConfirmRemovePatientClicked(ActionEvent event) {
-        if (selectedPatient == null) return;
+    public void handleDelete(ActionEvent event) {
+        if (selectedPatient == null) {
+            patientLog.setText("Please select a patient to delete.");
+            return;
+        }
         OperationResult<Void> res = patientService.removePatient(selectedPatient);
         patientLog.setText(res.getMessage());
         if (res.isSuccess()) {
-            patientTable.setItems(FXCollections.observableArrayList(patientService.getPatients()));
-            patientRemoveDetails.setText("");
-            removeIdField.clear();
-            selectedPatient = null;
+            displayAllPatients();
+            clearFields();
         }
     }
 
     @FXML
-    public void updatePatientClicked(ActionEvent event) {
-        hideAll();
-        updatePatientInner.setVisible(false);
-        updatePatient.setVisible(true);
-    }
-
-    @FXML
-    public void btnUpdatePatientClicked(ActionEvent event) {
-        String id = updateIdField.getText();
-        OperationResult<Patient> res = patientService.findPatient(id);
-        if (!res.isSuccess()) {
-            patientUpdateDetails.setText(res.getMessage());
+    public void handleSearch(ActionEvent event) {
+        String keyword = searchTextField.getText() == null ? "" : searchTextField.getText().trim();
+        if (keyword.isEmpty()) {
+            displayAllPatients();
+            patientLog.setText("Displaying all patients.");
             return;
         }
-        selectedPatient = res.getData();
-        patientUpdateDetails.setText(selectedPatient.getPatientInfo());
-        
-        updatePatientInner.setVisible(true);
-        updateNameField.setText(selectedPatient.getName());
-        updateDiseaseField.setText(selectedPatient.getDisease());
-        updateSexField.setText(selectedPatient.getSex());
-        updateAdmitStatusField.setText(selectedPatient.getAdmitStatus());
-        updateAgeField.setText(String.valueOf(selectedPatient.getAge()));
-    }
-
-    @FXML
-    public void btnConfirmUpdatePatientClicked(ActionEvent event) {
-        if (selectedPatient == null) return;
-        OperationResult<Void> res = patientService.updatePatient(
-                selectedPatient,
-                updateNameField.getText(),
-                updateDiseaseField.getText(),
-                updateSexField.getText(),
-                updateAdmitStatusField.getText(),
-                updateAgeField.getText()
-        );
-        patientLog.setText(res.getMessage());
-        if (res.isSuccess()) {
-            patientTable.setItems(FXCollections.observableArrayList(patientService.getPatients()));
-            updateIdField.clear();
-            updateNameField.clear();
-            updateDiseaseField.clear();
-            updateSexField.clear();
-            updateAdmitStatusField.clear();
-            updateAgeField.clear();
-            patientUpdateDetails.setText("");
-            selectedPatient = null;
+        ArrayList<Patient> result = new ArrayList<>();
+        for (Patient p : patientService.getPatients()) {
+            if (p.getId().toLowerCase().contains(keyword.toLowerCase())
+                    || p.getName().toLowerCase().contains(keyword.toLowerCase())
+                    || p.getDisease().toLowerCase().contains(keyword.toLowerCase())) {
+                result.add(p);
+            }
         }
+        patientTable.setItems(FXCollections.observableArrayList(result));
+        patientLog.setText("Search successful, " + result.size() + " entries found.");
     }
 
     @FXML
-    public void findPatientClicked(ActionEvent event) {
-        hideAll();
-        findPatient.setVisible(true);
+    public void handleRefresh(ActionEvent event) {
+        searchTextField.clear();
+        displayAllPatients();
+        patientLog.setText("Displaying all patients.");
     }
 
     @FXML
-    public void btnFindPatientClicked(ActionEvent event) {
-        String id = findIdField.getText();
-        OperationResult<Patient> res = patientService.findPatient(id);
-        patientLog.setText(res.getMessage());
-        if (!res.isSuccess()) return;
-        findIdField.clear();
-        patientTable.setItems(FXCollections.observableArrayList(res.getData()));
-        hideAll();
-        displayPatient.setVisible(true);
+    public void handleClear(ActionEvent event) {
+        clearFields();
+        patientLog.setText("Input fields cleared.");
     }
 
-    @FXML
-    public void searchPatientClicked(ActionEvent event) {
-        hideAll();
-        searchPatient.setVisible(true);
-    }
-
-    @FXML
-    public void btnSearchPatientClicked(ActionEvent event) {
-        OperationResult<ArrayList<Patient>> res = patientService.searchPatient(
-                searchIdField.getText(),
-                searchNameField.getText(),
-                searchDiseaseField.getText(),
-                searchSexField.getText(),
-                searchAdmitStatusField.getText(),
-                searchAgeField.getText()
-        );
-        patientLog.setText(res.getMessage());
-        if (!res.isSuccess()) return;
-        patientTable.setItems(FXCollections.observableArrayList(res.getData()));
-        searchIdField.clear();
-        searchNameField.clear();
-        searchDiseaseField.clear();
-        searchSexField.clear();
-        searchAdmitStatusField.clear();
-        searchAgeField.clear();
-        hideAll();
-        displayPatient.setVisible(true);
-    }
-
-    @FXML
-    public void displayAllPatientClicked(ActionEvent event) {
-        hideAll();
-        displayPatient.setVisible(true);
+    private void displayAllPatients() {
         patientTable.setItems(FXCollections.observableArrayList(patientService.getPatients()));
+    }
+
+    private void clearFields() {
+        patientIdTextField.setText(patientService.getPatientId());
+        nameTextField.clear();
+        diseaseTextField.clear();
+        genderComboBox.setValue(null);
+        admitStatusComboBox.setValue(null);
+        ageTextField.clear();
+        selectedPatient = null;
+        patientTable.getSelectionModel().clearSelection();
     }
 }
